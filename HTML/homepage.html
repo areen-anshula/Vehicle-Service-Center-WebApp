@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AutoPulse | Automotive Service</title>
+    <link href="./output.css" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/homepage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../src/output.css" rel="stylesheet">
+</head>
+<body class="font-poppins !bg-[#F5F5F5]">
+
+<!-- Navigation Bar -->
+    
+<header
+    class="sticky top-0 z-50 flex min-h-[70px] w-full flex-wrap items-center justify-between bg-black px-4 md:px-[6%] py-3 shadow-md">
+
+    <!-- Logo -->
+    <div class="shrink-0">
+        <img
+            src="../MEDIA/AutoPulse Automotive Service Logo.png"
+            alt="Logo"
+            class="w-[110px] md:w-[125px]">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="hidden md:flex items-center gap-14">
+        <a href="#" class="text-[#E89000] font-medium text-[10px] sm:text-[12px] md:text-[13px] lg:text-[15px]">Home</a>
+        <a href="#about" class="text-white hover:text-[#E89000] text-[10px] sm:text-[12px] md:text-[13px] lg:text-[15px]">About Us</a>
+        <a href="#services" class="text-white hover:text-[#E89000] text-[10px] sm:text-[12px] md:text-[13px] lg:text-[15px]">Services</a>
+        <a href="#contact" class="text-white hover:text-[#E89000] text-[10px] sm:text-[12px] md:text-[13px] lg:text-[15px]">Contact</a>
+    </nav>
+
+    <!-- Buttons -->
+    <div class="flex items-center gap-8">
+        <a href="#login"
+           class="hidden sm:flex text-sm font-semibold text-white hover:text-[#E89000]">
+            <i class="fa-solid fa-user mr-2"></i>
+            Login
+        </a>
+
+        <a href="#appointment"
+           class="rounded-md bg-[#E89000] px-3 py-2 text-xs md:text-sm font-semibold text-white hover:bg-[#FFA500]">
+            <i class="fa-solid fa-calendar mr-2"></i>
+            Book Appointment
+        </a>
+    </div>
+</header>
+
+<!-- // Navigation Bar -->
+
+
+<!-- Banner image  -->
+<section class="banner-image">
+    <div class="relative w-full">
+        <!-- Banner Image -->
+        <img
+            class="h-[600px] w-full object-cover"
+            src="../media/banner-image1.jpg"
+            alt="Vehicle Service Center">
+
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0 bg-black/55"></div>
+
+        <!-- Banner Content -->
+        <div class="absolute inset-0 flex items-center">
+            <div class="max-w-[650px] pl-[6%]">
+
+                <!-- Tagline -->
+                <div class="mb-5 flex items-center gap-3">
+                    <span class="h-[2px] w-8 bg-[#E89000]"></span>
+                    <p class="text-sm font-semibold uppercase tracking-wide text-[#E89000]">
+                        Your Vehicle • Our Priority
+                    </p>
+                </div>
+
+                <!-- Heading -->
+                <h1 class="mb-4 text-[25px] sm:text-[30px] md:text-[35px] lg:text-[40px] font-bold leading-tight text-white">
+                    Professional Vehicle
+                    <br>
+                    <span class="text-[#E89000]">
+                        Service & Care
+                    </span>
+                </h1>
+
+                <!-- Description -->
+                <p class="mb-8 max-w-[500px] text-[10px] sm:text-[12px] md:text-[13px] lg:text-[15px] leading-relaxed text-gray-300">
+                    Keep your vehicle running at its best with our expert
+                    service, modern facilities and genuine spare parts.
+                </p>
+
+                <!-- Buttons -->
+                <div class="flex flex-wrap gap-4">
+
+                    <a href="#appointment"
+                        class="flex items-center gap-2 rounded-md bg-[#E89000] px-6 py-3 font-semibold text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] text-white transition duration-300 hover:bg-[#FFA500]">
+
+                        <i class="fa-solid fa-calendar"></i>
+                        Book Appointment
+                    </a>
+
+                    <a href="#services"
+                        class="flex items-center gap-2 rounded-md border border-[#E89000] bg-black/40 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] px-6 py-3 font-semibold text-white transition duration-300 hover:bg-[#E89000]">
+
+                        Explore Our Services
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- // Banner image  -->
+
+<!-- About Us Section -->
+<section id="about" class="bg-white py-8 md:py-16">
+    <div class="mx-auto max-w-7xl px-5 md:px-[1%]">
+
+        <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+
+            <!-- Left Image -->
+            <div>
+                <img src="../media/trust-mechanic.webp" alt="Vehicle Service" class="h-[400px] w-full rounded-xl object-cover shadow-md">
+            </div>
+
+            <!-- Right Content -->
+            <div>
+
+                <!-- Section Label -->
+                <p class="mb-2 text-[12px] font-bold uppercase tracking-widest text-[#E89000]">
+                    About Us
+                </p>
+
+                <!-- Heading -->
+                <h2 class="mb-4 font-bold leading-tight text-[#111827] text-[25px] sm:text-[28px] md:text-[33px] lg:text-[38px]">Trusted Care for<br>Every Journey</h2>
+
+                <!-- Description -->
+                <p class="mb-10 leading-7 text-gray-600 text-[10px] sm:text-[12px] md:text-[13px] lg:text-[15px]">
+                    We are a professional vehicle service center dedicated to keeping your car safe, reliable and running smoothly. With
+                    experienced mechanics, modern diagnostic tools and genuine spare parts, we deliver high-quality service you can trust.
+                </p>
+
+                <!-- Features -->
+                <div class="grid grid-cols-2 gap-6 md:grid-cols-4">
+
+                    <!-- Feature 1 -->
+                    <div class="text-center">
+                        <div class="mb-3 text-4xl text-[#E89000]">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+
+                        <h4 class="text-[14px] font-semibold text-gray-800">Experienced<br>Mechanics
+                        </h4>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="text-center md:border-l md:border-gray-200">
+                        <div class="mb-3 text-4xl text-[#E89000]">
+                            <i class="fa-solid fa-gear"></i>
+                        </div>
+
+                        <h4 class="text-[14px] font-semibold text-gray-800">
+                            Modern
+                            <br>
+                            Equipment
+                        </h4>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="text-center md:border-l md:border-gray-200">
+                        <div class="mb-3 text-4xl text-[#E89000]">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+
+                        <h4 class="text-[14px] font-semibold text-gray-800">
+                            Genuine
+                            <br>
+                            Spare Parts
+                        </h4>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="text-center md:border-l md:border-gray-200">
+                        <div class="mb-3 text-4xl text-[#E89000]">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+
+                        <h4 class="text-[14px] font-semibold text-gray-800">
+                            Customer
+                            <br>
+                            Satisfaction
+                        </h4>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Services Section -->
+<section id="services" class="bg-[#F5F5F5] py-12 md:py-16">
+    <div class="mx-auto max-w-7xl px-5 md:px-[6%]">
+
+        <!-- Section Header -->
+        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+            <div>
+                <p class="mb-2 text-[12px] font-bold uppercase tracking-widest text-[#E89000]">
+                    Our Services
+                </p>
+
+                <h2 class="text-[28px] font-bold text-[#111827]
+                           sm:text-[32px]
+                           md:text-[38px]">
+                    Comprehensive Vehicle Services
+                </h2>
+            </div>
+
+            <a href="#"
+               class="flex items-center gap-2 font-semibold text-[#E89000] transition hover:text-orange-600">
+                View All Services
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+        <!-- Service Cards -->
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+
+            <!-- Card 1 -->
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
+
+                <img
+                    src="#"
+                    alt="Engine Service"
+                    class="h-44 w-full object-cover">
+
+                <div class="p-4">
+
+                    <div class="mb-4 text-3xl text-[#E89000]">
+                        <i class="fa-solid fa-engine-warning"></i>
+                    </div>
+
+                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
+                        Engine Service
+                    </h3>
+
+                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
+                        Complete engine check-up, cleaning and performance tuning.
+                    </p>
+
+                    <p class="text-sm text-gray-400">
+                        From
+                        <span class="ml-2 font-bold text-[#E89000]">
+                            LKR 5,000
+                        </span>
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
+
+                <img
+                    src="#"
+                    alt="Wheel Service"
+                    class="h-44 w-full object-cover">
+
+                <div class="p-4">
+
+                    <div class="mb-4 text-3xl text-[#E89000]">
+                        <i class="fa-solid fa-circle-dot"></i>
+                    </div>
+
+                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
+                        Wheel & Tyre Service
+                    </h3>
+
+                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
+                        Tyre change, balancing, alignment and rotation.
+                    </p>
+
+                    <p class="text-sm text-gray-400">
+                        From
+                        <span class="ml-2 font-bold text-[#E89000]">
+                            LKR 2,000
+                        </span>
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
+
+                <img
+                    src="#"
+                    alt="Brake Repair"
+                    class="h-44 w-full object-cover">
+
+                <div class="p-4">
+
+                    <div class="mb-4 text-3xl text-[#E89000]">
+                        <i class="fa-solid fa-compact-disc"></i>
+                    </div>
+
+                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
+                        Brake Repair
+                    </h3>
+
+                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
+                        Inspection, replacement and brake system service.
+                    </p>
+
+                    <p class="text-sm text-gray-400">
+                        From
+                        <span class="ml-2 font-bold text-[#E89000]">
+                            LKR 3,000
+                        </span>
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
+
+                <img
+                    src="#"
+                    alt="Vehicle Cleaning"
+                    class="h-44 w-full object-cover">
+
+                <div class="p-4">
+
+                    <div class="mb-4 text-3xl text-[#E89000]">
+                        <i class="fa-solid fa-car"></i>
+                    </div>
+
+                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
+                        Vehicle Cleaning
+                    </h3>
+
+                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
+                        Interior & exterior cleaning, polishing and detailing.
+                    </p>
+
+                    <p class="text-sm text-gray-400">
+                        From
+                        <span class="ml-2 font-bold text-[#E89000]">
+                            LKR 1,500
+                        </span>
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
+
+                <img
+                    src="#"
+                    alt="Battery Service"
+                    class="h-44 w-full object-cover">
+
+                <div class="p-4">
+
+                    <div class="mb-4 text-3xl text-[#E89000]">
+                        <i class="fa-solid fa-car-battery"></i>
+                    </div>
+
+                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
+                        Battery Service
+                    </h3>
+
+                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
+                        Battery check, replacement and electrical system inspection.
+                    </p>
+
+                    <p class="text-sm text-gray-400">
+                        From
+                        <span class="ml-2 font-bold text-[#E89000]">
+                            LKR 2,500
+                        </span>
+                    </p>
+
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
+
+                <img
+                    src="#"
+                    alt="AC Service"
+                    class="h-44 w-full object-cover">
+
+                <div class="p-4">
+
+                    <div class="mb-4 text-3xl text-[#E89000]">
+                        <i class="fa-regular fa-snowflake"></i>
+                    </div>
+
+                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
+                        AC Service
+                    </h3>
+
+                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
+                        Cooling system check, recharge and repair.
+                    </p>
+
+                    <p class="text-sm text-gray-400">
+                        From
+                        <span class="ml-2 font-bold text-[#E89000]">
+                            LKR 2,000
+                        </span>
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+  
+</body>
+</html>
