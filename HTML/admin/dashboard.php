@@ -172,6 +172,100 @@
 
         <!-- PAGE CONTENT -->
         <div class="space-y-6 p-4 sm:p-6 lg:p-8">
+            
+<!-- Admin Dashboard Statistics -->
+<section class="mb-6">
+    <div class="mb-4 flex items-center justify-between">
+        <div>
+            <h2 class="text-lg font-bold text-gray-900">Overview Statistics</h2>
+            <p class="mt-0.5 text-xs text-gray-500">A quick overview of your service center</p>
+        </div>
+        <span class="hidden items-center gap-1.5 rounded-full bg-green-50 px-3 py-1.5 text-[10px] font-semibold text-green-600 sm:inline-flex">
+            <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+            Live Overview
+        </span>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+        <!-- Total Customers -->
+        <div class="group rounded-xl border border-gray-100 border-l-4 border-l-[#E89000] bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 transition group-hover:bg-orange-100">
+                        <i class="fa-solid fa-users text-xl text-[#E89000]"></i>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-medium text-gray-500">Total Customers</p>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">245</h3>
+                    </div>
+                </div>
+                <i class="fa-solid fa-arrow-trend-up text-sm text-[#E89000]"></i>
+            </div>
+            <div class="mt-4 border-t border-gray-100 pt-3">
+                <p class="text-[10px] text-gray-500">Registered customers</p>
+            </div>
+        </div>
+
+        <!-- Total Mechanics -->
+        <div class="group rounded-xl border border-gray-100 border-l-4 border-l-blue-500 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 transition group-hover:bg-blue-100">
+                        <i class="fa-solid fa-user-gear text-xl text-blue-500"></i>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-medium text-gray-500">Total Mechanics</p>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">18</h3>
+                    </div>
+                </div>
+                <i class="fa-solid fa-users text-sm text-blue-500"></i>
+            </div>
+            <div class="mt-4 border-t border-gray-100 pt-3">
+                <p class="text-[10px] text-gray-500">Registered service technicians</p>
+            </div>
+        </div>
+
+        <!-- Active Job Cards -->
+        <div class="group rounded-xl border border-gray-100 border-l-4 border-l-green-500 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 transition group-hover:bg-green-100">
+                        <i class="fa-solid fa-car text-xl text-green-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-medium text-gray-500">Active Job Cards</p>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">32</h3>
+                    </div>
+                </div>
+                <i class="fa-solid fa-clipboard-list text-sm text-green-600"></i>
+            </div>
+            <div class="mt-4 border-t border-gray-100 pt-3">
+                <p class="text-[10px] text-gray-500">Currently active service jobs</p>
+            </div>
+        </div>
+
+        <!-- Spare Parts -->
+        <div class="group rounded-xl border border-gray-100 border-l-4 border-l-red-500 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 transition group-hover:bg-red-100">
+                        <i class="fa-solid fa-box-open text-xl text-red-500"></i>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-medium text-gray-500">Total Spare Parts</p>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">1,250</h3>
+                    </div>
+                </div>
+                <i class="fa-solid fa-boxes-stacked text-sm text-red-500"></i>
+            </div>
+            <div class="mt-4 border-t border-gray-100 pt-3">
+                <p class="text-[10px] text-gray-500">Parts available in inventory</p>
+            </div>
+        </div>
+
+    </div>
+</section>
 
 
             <!-- Statistics Cards Here -->
