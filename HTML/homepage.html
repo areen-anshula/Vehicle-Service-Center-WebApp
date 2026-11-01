@@ -44,7 +44,7 @@
             Login
         </a>
 
-        <a href="#appointment"
+        <a href="book_appointment.html"
            class="rounded-md bg-[#E89000] px-3 py-2 text-xs md:text-sm font-semibold text-white hover:bg-[#FFA500]">
             <i class="fa-solid fa-calendar mr-2"></i>
             Book Appointment
@@ -97,7 +97,7 @@
                 <!-- Buttons -->
                 <div class="flex flex-wrap gap-4">
 
-                    <a href="#appointment"
+                    <a href="book_appointment.html"
                         class="flex items-center gap-2 rounded-md bg-[#E89000] px-6 py-3 font-semibold text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] text-white transition duration-300 hover:bg-[#FFA500]">
 
                         <i class="fa-solid fa-calendar"></i>
@@ -106,7 +106,6 @@
 
                     <a href="#services"
                         class="flex items-center gap-2 rounded-md border border-[#E89000] bg-black/40 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] px-6 py-3 font-semibold text-white transition duration-300 hover:bg-[#E89000]">
-
                         Explore Our Services
                         <i class="fa-solid fa-arrow-right"></i>
                     </a>
@@ -198,7 +197,6 @@
                     </div>
 
                 </div>
-
             </div>
 
         </div>
@@ -208,231 +206,488 @@
 
 
 <!-- Services Section -->
-<section id="services" class="bg-[#F5F5F5] py-12 md:py-16">
-    <div class="mx-auto max-w-7xl px-5 md:px-[6%]">
 
-        <!-- Section Header -->
-        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+<section id="services" class="bg-gray-50 py-26 px-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section Header -->
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+      <div>
+        <p class="text-[#E89000] text-xs font-bold uppercase tracking-wider mb-1">Our Services</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Comprehensive Vehicle Services</h2>
+      </div>
+      <a href="services.html" class="text-[#E89000] text-sm font-medium hover:text-[#FFA500] flex items-center gap-2">
+        View All Services <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
 
-            <div>
-                <p class="mb-2 text-[12px] font-bold uppercase tracking-widest text-[#E89000]">
-                    Our Services
-                </p>
+    <!-- Service Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
 
-                <h2 class="text-[28px] font-bold text-[#111827]
-                           sm:text-[32px]
-                           md:text-[38px]">
-                    Comprehensive Vehicle Services
-                </h2>
-            </div>
-
-            <a href="#"
-               class="flex items-center gap-2 font-semibold text-[#E89000] transition hover:text-orange-600">
-                View All Services
-                <i class="fa-solid fa-arrow-right"></i>
-            </a>
-
+      <!-- Engine Service -->
+      <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300">
+        <div class="h-24 overflow-hidden">
+          <img src="../MEDIA/engine_repair.jpg" alt="Engine Service" class="w-full h-full object-cover hover:scale-105 transition duration-300">
         </div>
+        <div class="p-3">
+          <div class="text-[#E89000] text-2xl mb-2"><i class="fa-solid fa-gears"></i></div>
+          <h3 class="text-s font-bold text-gray-900 mb-1">Engine Service</h3>
+          <p class="text-[11px] leading-4 text-gray-500 min-h-10">Complete engine check-up, cleaning and performance tuning.</p>
+          <p class="text-[11px] text-gray-500 mt-3">From <span class="text-[#E89000] font-bold text-xs ml-1">LKR 5,000</span></p>
+        </div>
+      </div>
 
-        <!-- Service Cards -->
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+      <!-- Wheel & Tyre Service -->
+      <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300">
+        <div class="h-24 overflow-hidden">
+          <img src="../MEDIA/wheel service.avif" alt="Wheel and Tyre Service" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+        </div>
+        <div class="p-3">
+          <div class="text-[#E89000] text-2xl mb-2"><i class="fa-solid fa-compact-disc"></i></div>
+          <h3 class="text-s font-bold text-gray-900 mb-1">Wheel & Tyre Service</h3>
+          <p class="text-[11px] leading-4 text-gray-500 min-h-10">Tyre change, balancing, alignment and rotation.</p>
+          <p class="text-[11px] text-gray-500 mt-3">From <span class="text-[#E89000] font-bold text-xs ml-1">LKR 2,000</span></p>
+        </div>
+      </div>
 
-            <!-- Card 1 -->
-            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
+      <!-- Brake Repair -->
+      <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300">
+        <div class="h-24 overflow-hidden">
+          <img src="../MEDIA/brake_repair.avif" alt="Brake Repair" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+        </div>
+        <div class="p-3">
+          <div class="text-[#E89000] text-2xl mb-2"><i class="fa-solid fa-gauge-high"></i></div>
+          <h3 class="text-s font-bold text-gray-900 mb-1">Brake Repair</h3>
+          <p class="text-[11px] leading-4 text-gray-500 min-h-10">Inspection, replacement and brake system service.</p>
+          <p class="text-[11px] text-gray-500 mt-3">From <span class="text-[#E89000] font-bold text-xs ml-1">LKR 3,000</span></p>
+        </div>
+      </div>
 
-                <img
-                    src="#"
-                    alt="Engine Service"
-                    class="h-44 w-full object-cover">
+      <!-- Vehicle Cleaning -->
+      <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300">
+        <div class="h-24 overflow-hidden">
+          <img src="../MEDIA/vehicle_cleaning.jpeg" alt="Vehicle Cleaning" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+        </div>
+        <div class="p-3">
+          <div class="text-[#E89000] text-2xl mb-2"><i class="fa-solid fa-car"></i></div>
+          <h3 class="text-s font-bold text-gray-900 mb-1">Vehicle Cleaning</h3>
+          <p class="text-[11px] leading-4 text-gray-500 min-h-10">Interior & exterior cleaning, polishing and detailing.</p>
+          <p class="text-[11px] text-gray-500 mt-3">From <span class="text-[#E89000] font-bold text-xs ml-1">LKR 1,500</span></p>
+        </div>
+      </div>
 
-                <div class="p-4">
+      <!-- Battery Service -->
+      <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300">
+        <div class="h-24 overflow-hidden">
+          <img src="../MEDIA/battery service.avif" alt="Battery Service" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+        </div>
+        <div class="p-3">
+          <div class="text-[#E89000] text-2xl mb-2"><i class="fa-solid fa-car-battery"></i></div>
+          <h3 class="text-s font-bold text-gray-900 mb-1">Battery Service</h3>
+          <p class="text-[11px] leading-4 text-gray-500 min-h-10">Battery check, replacement and electrical system check.</p>
+          <p class="text-[11px] text-gray-500 mt-3">From <span class="text-[#E89000] font-bold text-xs ml-1">LKR 2,500</span></p>
+        </div>
+      </div>
 
-                    <div class="mb-4 text-3xl text-[#E89000]">
-                        <i class="fa-solid fa-engine-warning"></i>
+      <!-- AC Service -->
+      <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300">
+        <div class="h-24 overflow-hidden">
+          <img src="../MEDIA/AC service.webp" alt="AC Service" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+        </div>
+        <div class="p-3">
+          <div class="text-[#E89000] text-2xl mb-2"><i class="fa-solid fa-snowflake"></i></div>
+          <h3 class="text-s font-bold text-gray-900 mb-1">AC Service</h3>
+          <p class="text-[11px] leading-4 text-gray-500 min-h-10">Cooling system check, recharge and repair.</p>
+          <p class="text-[11px] text-gray-500 mt-3">From <span class="text-[#E89000] font-bold text-xs ml-1">LKR 2,000</span></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- Why Choose Us -->
+<section class="relative overflow-hidden bg-[#080808] py-16 md:py-20">
+
+    <!-- Background Decoration -->
+    <div class="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[#E89000]/10 blur-3xl"></div>
+    <div class="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-[#E89000]/5 blur-3xl"></div>
+
+    <div class="relative mx-auto max-w-7xl px-5 md:px-[6%]">
+
+        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
+
+            <!-- Left Content -->
+            <div>
+
+                <!-- Section Heading -->
+                <div class="mb-10">
+                    <div class="mb-3 flex items-center gap-3">
+                        <span class="h-[2px] w-8 bg-[#E89000]"></span>
+                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#E89000]">
+                            Why Choose Us
+                        </p>
                     </div>
 
-                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
-                        Engine Service
-                    </h3>
+                    <h2 class="max-w-xl text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl text-[25px] sm:text-[30px] md:text-[35px] lg:text-[40px]">
+                        Your Vehicle Deserves
+                        <span class="text-[#E89000]"><br>The Best</span>
+                    </h2>
 
-                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
-                        Complete engine check-up, cleaning and performance tuning.
+                    <p class="mt-4 max-w-lg text-sm leading-7 text-gray-400">
+                        We combine professional expertise, quality parts and reliable service to keep your vehicle safe and performing at its best.
                     </p>
+                </div>
 
-                    <p class="text-sm text-gray-400">
-                        From
-                        <span class="ml-2 font-bold text-[#E89000]">
-                            LKR 5,000
-                        </span>
-                    </p>
+                <!-- Benefits Grid -->
+                <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
+
+                    <!-- Benefit 1 -->
+                    <div class="group border-b border-white/10 pb-6 sm:border-b-0 sm:border-r sm:pr-5 lg:pr-5">
+
+                        <div class="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[#E89000]/10 text-2xl text-[#E89000] transition duration-300 group-hover:bg-[#E89000] group-hover:text-white">
+                            <i class="fa-solid fa-medal"></i>
+                        </div>
+
+                        <h3 class="mb-3 text-base font-bold text-white">
+                            Skilled Professionals
+                        </h3>
+
+                        <p class="text-sm leading-6 text-gray-400">
+                            Experienced mechanics delivering professional workmanship and reliable vehicle care.
+                        </p>
+
+                    </div>
+
+                    <!-- Benefit 2 -->
+                    <div class="group border-b border-white/10 pb-6 sm:border-b-0 lg:border-r lg:pr-5">
+
+                        <div class="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[#E89000]/10 text-2xl text-[#E89000] transition duration-300 group-hover:bg-[#E89000] group-hover:text-white">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+
+                        <h3 class="mb-3 text-base font-bold text-white">
+                            Reliable Service
+                        </h3>
+
+                        <p class="text-sm leading-6 text-gray-400">
+                            Quality maintenance and repairs with attention to detail and customer satisfaction.
+                        </p>
+
+                    </div>
+
+                    <!-- Benefit 3 -->
+                    <div class="group border-b border-white/10 pb-6 sm:border-b-0 sm:border-r sm:pr-5 lg:pr-5">
+
+                        <div class="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[#E89000]/10 text-2xl text-[#E89000] transition duration-300 group-hover:bg-[#E89000] group-hover:text-white">
+                            <i class="fa-solid fa-tags"></i>
+                        </div>
+
+                        <h3 class="mb-3 text-base font-bold text-white">
+                            Transparent Pricing
+                        </h3>
+
+                        <p class="text-sm leading-6 text-gray-400">
+                            Honest pricing, clear estimates and no unexpected service charges.
+                        </p>
+
+                    </div>
+
+                    <!-- Benefit 4 -->
+                    <div class="group">
+
+                        <div class="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[#E89000]/10 text-2xl text-[#E89000] transition duration-300 group-hover:bg-[#E89000] group-hover:text-white">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+
+                        <h3 class="mb-3 text-base font-bold text-white">
+                            Easy Appointments
+                        </h3>
+
+                        <p class="text-sm leading-6 text-gray-400">
+                            Convenient booking options to schedule your vehicle service without hassle.
+                        </p>
+
+                    </div>
 
                 </div>
+
             </div>
 
-            <!-- Card 2 -->
-            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
+            <!-- Right Image -->
+            <div class="relative mx-auto w-full max-w-lg lg:max-w-none">
 
-                <img
-                    src="#"
-                    alt="Wheel Service"
-                    class="h-44 w-full object-cover">
+                <!-- Orange Accent -->
+                <div class="absolute -right-3 -top-3 h-full w-full rounded-2xl border-2 border-[#E89000]"></div>
 
-                <div class="p-4">
+                <!-- Image -->
+                <div class="relative overflow-hidden rounded-2xl bg-gray-900">
+                    <img
+                        src="../media/why-us.webp"
+                        alt="Professional vehicle maintenance and automotive service"
+                        class="h-[300px] w-full object-cover sm:h-[380px] lg:h-[420px]">
 
-                    <div class="mb-4 text-3xl text-[#E89000]">
-                        <i class="fa-solid fa-circle-dot"></i>
+                    <!-- Image Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+
+                    <!-- Image Caption -->
+                    <div class="absolute bottom-0 left-0 p-6">
+                        <p class="mb-2 text-xs font-bold uppercase tracking-widest text-[#E89000]">
+                            "Your Vehicle • Our Priority"
+                        </p>
+                        <h3 class="text-1xl font-bold text-white">
+                            Professional Care.<br>
+                            Reliable Performance.
+                        </h3>
                     </div>
-
-                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
-                        Wheel & Tyre Service
-                    </h3>
-
-                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
-                        Tyre change, balancing, alignment and rotation.
-                    </p>
-
-                    <p class="text-sm text-gray-400">
-                        From
-                        <span class="ml-2 font-bold text-[#E89000]">
-                            LKR 2,000
-                        </span>
-                    </p>
-
                 </div>
-            </div>
 
-            <!-- Card 3 -->
-            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
-
-                <img
-                    src="#"
-                    alt="Brake Repair"
-                    class="h-44 w-full object-cover">
-
-                <div class="p-4">
-
-                    <div class="mb-4 text-3xl text-[#E89000]">
-                        <i class="fa-solid fa-compact-disc"></i>
-                    </div>
-
-                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
-                        Brake Repair
-                    </h3>
-
-                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
-                        Inspection, replacement and brake system service.
-                    </p>
-
-                    <p class="text-sm text-gray-400">
-                        From
-                        <span class="ml-2 font-bold text-[#E89000]">
-                            LKR 3,000
-                        </span>
-                    </p>
-
-                </div>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
-
-                <img
-                    src="#"
-                    alt="Vehicle Cleaning"
-                    class="h-44 w-full object-cover">
-
-                <div class="p-4">
-
-                    <div class="mb-4 text-3xl text-[#E89000]">
-                        <i class="fa-solid fa-car"></i>
-                    </div>
-
-                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
-                        Vehicle Cleaning
-                    </h3>
-
-                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
-                        Interior & exterior cleaning, polishing and detailing.
-                    </p>
-
-                    <p class="text-sm text-gray-400">
-                        From
-                        <span class="ml-2 font-bold text-[#E89000]">
-                            LKR 1,500
-                        </span>
-                    </p>
-
-                </div>
-            </div>
-
-            <!-- Card 5 -->
-            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
-
-                <img
-                    src="#"
-                    alt="Battery Service"
-                    class="h-44 w-full object-cover">
-
-                <div class="p-4">
-
-                    <div class="mb-4 text-3xl text-[#E89000]">
-                        <i class="fa-solid fa-car-battery"></i>
-                    </div>
-
-                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
-                        Battery Service
-                    </h3>
-
-                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
-                        Battery check, replacement and electrical system inspection.
-                    </p>
-
-                    <p class="text-sm text-gray-400">
-                        From
-                        <span class="ml-2 font-bold text-[#E89000]">
-                            LKR 2,500
-                        </span>
-                    </p>
-
-                </div>
-            </div>
-
-            <!-- Card 6 -->
-            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-lg">
-
-                <img
-                    src="#"
-                    alt="AC Service"
-                    class="h-44 w-full object-cover">
-
-                <div class="p-4">
-
-                    <div class="mb-4 text-3xl text-[#E89000]">
-                        <i class="fa-regular fa-snowflake"></i>
-                    </div>
-
-                    <h3 class="mb-2 text-[17px] font-bold text-gray-900">
-                        AC Service
-                    </h3>
-
-                    <p class="mb-5 text-[14px] leading-6 text-gray-500">
-                        Cooling system check, recharge and repair.
-                    </p>
-
-                    <p class="text-sm text-gray-400">
-                        From
-                        <span class="ml-2 font-bold text-[#E89000]">
-                            LKR 2,000
-                        </span>
-                    </p>
-
-                </div>
             </div>
 
         </div>
 
     </div>
+
 </section>
+
+
+<!-- Contact Section -->
+<section id="contact" class="bg-white py-16 md:py-20">
+    <div class="mx-auto max-w-7xl px-5 md:px-[6%]">
+
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1.2fr] gap-10 lg:gap-12 items-center">
+
+            <!-- Left Content -->
+            <div class="flex flex-col justify-center">
+                <p class="mb-2 text-xs font-bold uppercase tracking-widest text-[#E89000]">
+                    Contact Us
+                </p>
+                <h2 class="mb-4 text-3xl md:text-4xl font-bold leading-tight text-[#111827]">
+                    Get in Touch
+                </h2>
+                <p class="text-sm md:text-[15px] leading-7 text-gray-600">
+                    We're here to help! Reach out to us for any inquiries, bookings, or support. Our team will get back to you as soon as possible.
+                </p>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="flex flex-col justify-center space-y-6 lg:pl-4">
+
+                <div class="flex items-center gap-4">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-xl text-[#E89000]">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">123 Service Road</p>
+                        <p class="text-xs md:text-sm text-gray-500">Colombo 05, Sri Lanka</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-xl text-[#E89000]">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Phone Number</p>
+                        <p class="text-xs md:text-sm text-gray-500">+94 11 234 5678</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-xl text-[#E89000]">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Email Address</p>
+                        <p class="text-xs md:text-sm text-gray-500">info@vehiclecenter.lk</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-xl text-[#E89000]">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Opening Hours</p>
+                        <p class="text-xs md:text-sm text-gray-500">Mon - Sat: 8:00 AM - 6:00 PM</p>
+                        <p class="text-xs md:text-sm text-gray-500">Sunday: Closed</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Contact Form -->
+            <div class="w-full rounded-xl bg-white p-6 md:p-7 shadow-lg border border-gray-100">
+                <h3 class="mb-5 text-xl font-bold text-gray-800">Send Us a Message</h3>
+
+                <form class="space-y-4">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input
+                            type="text"
+                            placeholder="Your Name"
+                            class="h-12 w-full rounded-lg border border-gray-300 px-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+
+                        <input
+                            type="email"
+                            placeholder="Your Email"
+                            class="h-12 w-full rounded-lg border border-gray-300 px-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+                    </div>
+
+                    <textarea
+                        rows="5"
+                        placeholder="Your Message"
+                        class="w-full resize-none rounded-lg border border-gray-300 p-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100"></textarea>
+
+                    <button
+                        type="submit"
+                        class="flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-lg bg-[#FFA500] font-semibold text-white transition hover:bg-[#E89000]">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Send Message
+                    </button>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Footer -->
+<footer style="background-color: #000; color: #fff;">
+
+    <!-- Main Footer -->
+    <div style="max-width: 1280px; margin: auto; padding: 48px 24px;">
+
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
+            width: 100%;
+        ">
+
+            <!-- Logo & Description -->
+            <div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../media/AutoPulse Automotive Service Logo.png" alt="AutoPulse Logo" style="width: 56px;">
+
+                    <div>
+                        <h3 style="font-size: 18px; font-weight: bold; margin: 0;">
+                            Vehicle
+                        </h3>
+                        <span style="color: #E89000; font-weight: bold;">
+                            Service Center
+                        </span>
+                    </div>
+                </div>
+
+                <p style="margin-top: 20px; font-size: 14px; line-height: 1.8; color: #9ca3af;">
+                    Providing reliable vehicle maintenance, repair services and professional automotive care to keep your vehicle performing at its best.
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 style="color: #E89000; font-size: 18px; margin: 0 0 20px;" class="ps-10">
+                    Quick Links
+                </h3>
+
+                <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 2.5; color: #9ca3af;" class="ps-10">
+                    <li class="ps-10"><a href="#" style="color: inherit; text-decoration: none;">Home</a></li>
+                    <li class="ps-10"><a href="#about" style="color: inherit; text-decoration: none;">About Us</a></li>
+                    <li class="ps-10"><a href="#services" style="color: inherit; text-decoration: none;">Services</a></li>
+                    <li class="ps-10"><a href="#contact" style="color: inherit; text-decoration: none;">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Our Services -->
+            <div>
+                <h3 style="color: #E89000; font-size: 18px; margin: 0 0 20px;">
+                    Our Services
+                </h3>
+
+                <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 2.5; color: #9ca3af;">
+                    <li>Engine Service</li>
+                    <li>Brake Repair</li>
+                    <li>Wheel Alignment</li>
+                    <li>Battery Service</li>
+                    <li>AC Service</li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div>
+                <h3 style="color: #E89000; font-size: 18px; margin: 0 0 20px;">
+                    Contact Info
+                </h3>
+
+                <div style="font-size: 14px; color: #9ca3af; line-height: 1.8;">
+                    <p style="margin: 0 0 14px;">
+                        <i class="fa-solid fa-location-dot" style="color: #E89000; margin-right: 8px;"></i>
+                        123 Service Road, Colombo, Sri Lanka
+                    </p>
+
+                    <p style="margin: 0 0 14px;">
+                        <i class="fa-solid fa-phone" style="color: #E89000; margin-right: 8px;"></i>
+                        +94 11 234 5678
+                    </p>
+
+                    <p style="margin: 0;">
+                        <i class="fa-solid fa-envelope" style="color: #E89000; margin-right: 8px;"></i>
+                        info@autopulse.lk
+                    </p>
+                </div>
+
+                <!-- Social Icons -->
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <a href="#" style="background: #111827; color: #E89000; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+
+                    <a href="#" style="background: #111827; color: #E89000; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+
+                    <a href="#" style="background: #111827; color: #E89000; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div style="border-top: 1px solid #1f2937;">
+        <div style="
+            max-width: 1280px;
+            margin: auto;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #6b7280;
+        ">
+            <p style="margin: 0;">
+                &copy; 2026 AutoPulse Vehicle Service Center. All rights reserved.
+            </p>
+
+            <div style="display: flex; gap: 20px;">
+                <a href="#" style="color: inherit; text-decoration: none;">Privacy Policy</a>
+                <a href="#" style="color: inherit; text-decoration: none;">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+
   
 </body>
 </html>
