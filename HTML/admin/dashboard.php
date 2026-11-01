@@ -16,7 +16,7 @@
         <!-- Logo -->
         <div class="border-b border-white/10 px-5 py-5">
             <a href="admin-dashboard.html" class="flex items-center gap-3">
-                <img src="#" alt="AutoPulse Logo" class="h-10 w-10 rounded-lg object-contain">
+                <img src="../../MEDIA/AutoPulse Automotive Service Logo.png" alt="AutoPulse Logo" class="h-15 w-15 rounded-lg object-contain">
                 <div>
                     <h1 class="text-xl font-bold tracking-tight">Auto<span class="text-[#E89000]">Pulse</span></h1>
                     <p class="mt-0.5 text-[10px] tracking-wide text-gray-400">VEHICLE SERVICE CENTER</p>
@@ -160,7 +160,6 @@
 
                     <!-- Profile -->
                     <a href="admin-profile.html" class="flex items-center gap-2 sm:gap-3">
-                        <img src="#" alt="Admin Profile" class="h-9 w-9 rounded-full border-2 border-[#E89000] object-cover">
                         <div class="hidden sm:block">
                             <h4 class="text-xs font-semibold text-gray-900">Admin</h4>
                             <p class="mt-0.5 text-[10px] text-gray-500">System Administrator</p>
@@ -174,17 +173,6 @@
         <!-- PAGE CONTENT -->
         <div class="space-y-6 p-4 sm:p-6 lg:p-8">
 
-            <!-- Welcome Section -->
-            <section class="flex flex-col justify-between gap-4 rounded-xl bg-gray-950 p-5 text-white shadow-sm sm:flex-row sm:items-center sm:p-6">
-                <div>
-                    <p class="text-xs font-medium text-orange-400">ADMINISTRATION</p>
-                    <h2 class="mt-1 text-xl font-bold">Welcome to AutoPulse!</h2>
-                    <p class="mt-1 text-xs text-gray-400">Manage your vehicle service center from one place.</p>
-                </div>
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E89000]/15">
-                    <i class="fa-solid fa-gauge-high text-2xl text-[#E89000]"></i>
-                </div>
-            </section>
 
             <!-- Statistics Cards Here -->
 
