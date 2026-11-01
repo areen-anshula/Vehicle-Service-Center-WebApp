@@ -1,0 +1,350 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Nov 01, 2026 at 01:37 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `autopulse`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `appointment`
+--
+
+CREATE TABLE `appointment` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `vehicle_registration_number` varchar(100) NOT NULL,
+  `brand` varchar(100) NOT NULL,
+  `model` varchar(100) NOT NULL,
+  `manufacture_year` varchar(4) NOT NULL,
+  `date` date NOT NULL,
+  `time` time NOT NULL,
+  `additional_note` text NOT NULL,
+  `status` varchar(100) NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `appointment_services`
+--
+
+CREATE TABLE `appointment_services` (
+  `id` int(11) NOT NULL,
+  `appointment_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `service_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact_messages`
+--
+
+CREATE TABLE `contact_messages` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `message` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_cards`
+--
+
+CREATE TABLE `job_cards` (
+  `id` int(11) NOT NULL,
+  `appointment_id` int(11) NOT NULL,
+  `mechanic_id` int(11) NOT NULL,
+  `status` varchar(100) NOT NULL DEFAULT 'Assigned',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_card_parts`
+--
+
+CREATE TABLE `job_card_parts` (
+  `job_card_id` int(11) NOT NULL,
+  `spare_part_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_card_services`
+--
+
+CREATE TABLE `job_card_services` (
+  `job_card_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `service_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `services`
+--
+
+CREATE TABLE `services` (
+  `id` int(11) NOT NULL,
+  `service_type` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `is_active()` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `service_images`
+--
+
+CREATE TABLE `service_images` (
+  `id` int(11) NOT NULL,
+  `image_name` varchar(255) NOT NULL,
+  `image_link` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `spare_parts`
+--
+
+CREATE TABLE `spare_parts` (
+  `id` int(11) NOT NULL,
+  `part_name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `part_price` decimal(10,2) NOT NULL,
+  `quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `spare_parts_image`
+--
+
+CREATE TABLE `spare_parts_image` (
+  `id` int(11) NOT NULL,
+  `spare_part_id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL DEFAULT 'client',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `appointment`
+--
+ALTER TABLE `appointment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `appointment_services`
+--
+ALTER TABLE `appointment_services`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `appointment_id` (`appointment_id`),
+  ADD KEY `service_id` (`service_id`);
+
+--
+-- Indexes for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_cards`
+--
+ALTER TABLE `job_cards`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_card_parts`
+--
+ALTER TABLE `job_card_parts`
+  ADD KEY `job_card_id` (`job_card_id`),
+  ADD KEY `spare_part_id` (`spare_part_id`);
+
+--
+-- Indexes for table `job_card_services`
+--
+ALTER TABLE `job_card_services`
+  ADD KEY `job_card_id` (`job_card_id`),
+  ADD KEY `service_id` (`service_id`);
+
+--
+-- Indexes for table `services`
+--
+ALTER TABLE `services`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `service_images`
+--
+ALTER TABLE `service_images`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `spare_parts`
+--
+ALTER TABLE `spare_parts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `spare_parts_image`
+--
+ALTER TABLE `spare_parts_image`
+  ADD KEY `spare_part_id` (`spare_part_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `appointment`
+--
+ALTER TABLE `appointment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `appointment_services`
+--
+ALTER TABLE `appointment_services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_cards`
+--
+ALTER TABLE `job_cards`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `services`
+--
+ALTER TABLE `services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `service_images`
+--
+ALTER TABLE `service_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `spare_parts`
+--
+ALTER TABLE `spare_parts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `appointment`
+--
+ALTER TABLE `appointment`
+  ADD CONSTRAINT `appointment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `appointment_services`
+--
+ALTER TABLE `appointment_services`
+  ADD CONSTRAINT `appointment_services_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointment_services_ibfk_2` FOREIGN KEY (`id`) REFERENCES `appointment` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `job_card_parts`
+--
+ALTER TABLE `job_card_parts`
+  ADD CONSTRAINT `job_card_parts_ibfk_1` FOREIGN KEY (`job_card_id`) REFERENCES `job_cards` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `job_card_parts_ibfk_2` FOREIGN KEY (`spare_part_id`) REFERENCES `spare_parts` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `job_card_services`
+--
+ALTER TABLE `job_card_services`
+  ADD CONSTRAINT `job_card_services_ibfk_1` FOREIGN KEY (`job_card_id`) REFERENCES `job_cards` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `job_card_services_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `service_images`
+--
+ALTER TABLE `service_images`
+  ADD CONSTRAINT `service_images_ibfk_1` FOREIGN KEY (`id`) REFERENCES `services` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `spare_parts_image`
+--
+ALTER TABLE `spare_parts_image`
+  ADD CONSTRAINT `spare_parts_image_ibfk_1` FOREIGN KEY (`spare_part_id`) REFERENCES `spare_parts` (`id`) ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

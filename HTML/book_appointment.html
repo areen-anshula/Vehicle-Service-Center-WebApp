@@ -10,7 +10,7 @@
 </head>
 <body class="min-h-screen bg-[#f5f5f5] font-sans text-[#171717]">
     <header class="sticky top-0 z-50 flex min-h-[70px] items-center bg-black px-4 py-3 shadow-md md:px-[6%]">
-        <a href="#" aria-label="AutoPulse Home">
+        <a href="homepage.html" aria-label="AutoPulse Home">
             <img src="../MEDIA/AutoPulse Automotive Service Logo.png" alt="AutoPulse Logo" class="w-[110px] md:w-[125px]">
         </a>
     </header>
@@ -19,20 +19,20 @@
             <!-- VEHICLE INFORMATION -->
             <section class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                 <h2 class="mb-4 flex items-center gap-2 text-base font-bold">
-                    <i class="fa-solid fa-car text-lg text-orange-500"></i>
+                    <i class="fa-solid fa-car text-lg text-[#E89000]"></i>
                     Vehicle Information
                 </h2>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <div>
                         <label for="registration" class="mb-1.5 block text-xs font-semibold">Vehicle Registration Number <span class="text-red-500">*</span></label>
-                        <div class="flex h-10 items-center gap-2 rounded-lg border border-gray-300 px-3 focus-within:border-orange-500">
+                        <div class="flex h-10 items-center gap-2 rounded-lg border border-gray-300 px-3 focus-within:border-[#E89000]">
                             <i class="fa-solid fa-car-side text-gray-400"></i>
                             <input type="text" id="registration" name="registration" placeholder="Enter registration number" required class="w-full bg-transparent text-xs uppercase outline-none placeholder:normal-case">
                         </div>
                     </div>
                     <div>
                         <label for="brand" class="mb-1.5 block text-xs font-semibold">Brand <span class="text-red-500">*</span></label>
-                        <select id="brand" name="brand" required class="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-xs outline-none focus:border-orange-500">
+                        <select id="brand" name="brand" required class="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-xs outline-none focus:border-[#E89000]">
                             <option value="" disabled selected>Select Brand</option>
                             <option value="BMW">BMW</option>
                             <option value="Mercedes-Benz">Mercedes-Benz</option>
@@ -46,11 +46,11 @@
                     </div>
                     <div>
                         <label for="model" class="mb-1.5 block text-xs font-semibold">Model <span class="text-red-500">*</span></label>
-                        <input type="text" id="model" name="model" placeholder="Enter vehicle model" required class="h-10 w-full rounded-lg border border-gray-300 px-3 text-xs outline-none focus:border-orange-500">
+                        <input type="text" id="model" name="model" placeholder="Enter vehicle model" required class="h-10 w-full rounded-lg border border-gray-300 px-3 text-xs outline-none focus:border-[#E89000]">
                     </div>
                     <div>
                         <label for="year" class="mb-1.5 block text-xs font-semibold">Manufacturing Year <span class="text-red-500">*</span></label>
-                        <select id="year" name="year" required class="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-xs outline-none focus:border-orange-500">
+                        <select id="year" name="year" required class="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-xs outline-none focus:border-[#E89000]">
                             <option value="" disabled selected>Select Year</option>
                             <option>2026</option>
                             <option>2025</option>
@@ -71,7 +71,7 @@
             <!-- SERVICE SELECTION -->
             <section class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                 <div class="mb-1 flex items-center gap-2">
-                    <i class="fa-solid fa-screwdriver-wrench text-lg text-orange-500"></i>
+                    <i class="fa-solid fa-screwdriver-wrench text-lg text-[#E89000]"></i>
                     <h2 class="text-base font-bold">Select Service Types</h2>
                 </div>
                 <p class="mb-4 text-xs text-gray-500">You can select multiple services for your vehicle.</p>
@@ -79,12 +79,12 @@
                     <!-- ENGINE SERVICE -->
                     <label class="relative cursor-pointer">
                         <input type="checkbox" name="services[]" value="Engine Service" class="peer sr-only">
-                        <div class="flex h-[105px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-1 text-center shadow-sm transition-all hover:border-orange-400 peer-checked:border-orange-500 peer-checked:bg-orange-50">
+                        <div class="flex h-[105px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-1 text-center shadow-sm transition-all hover:border-orange-400 peer-checked:border-[#E89000] peer-checked:bg-orange-50">
                             <i class="fa-solid fa-battery-full text-2xl text-gray-700 peer-checked:text-orange-500"></i>
-                            <span class="mt-2 text-[11px] font-bold">Engine Service</span>
-                            <span class="mt-1 text-[9px] text-gray-500">Engine check-up & tuning</span>
+                            <span class="mt-2 text-[13px] font-bold">Engine Service</span>
+                            <span class="mt-1 text-[11px] text-gray-500">Engine check-up & tuning</span>
                         </div>
-                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] text-white peer-checked:flex">
+                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-[#E89000] text-[10px] text-white peer-checked:flex">
                             <i class="fa-solid fa-check"></i>
                         </span>
                     </label>
@@ -93,10 +93,10 @@
                         <input type="checkbox" name="services[]" value="Wheel and Tyre Service" class="peer sr-only">
                         <div class="flex h-[105px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-1 text-center shadow-sm transition-all hover:border-orange-400 peer-checked:border-orange-500 peer-checked:bg-orange-50">
                             <i class="fa-solid fa-life-ring text-2xl text-gray-700"></i>
-                            <span class="mt-2 text-[11px] font-bold">Wheel & Tyre</span>
-                            <span class="mt-1 text-[9px] text-gray-500">Tyre change & balancing</span>
+                            <span class="mt-2 text-[13px] font-bold">Wheel & Tyre</span>
+                            <span class="mt-1 text-[11px] text-gray-500">Tyre change & balancing</span>
                         </div>
-                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] text-white peer-checked:flex">
+                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-[#E89000] text-[10px] text-white peer-checked:flex">
                             <i class="fa-solid fa-check"></i>
                         </span>
                     </label>
@@ -105,10 +105,10 @@
                         <input type="checkbox" name="services[]" value="Brake Repair" class="peer sr-only">
                         <div class="flex h-[105px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-1 text-center shadow-sm transition-all hover:border-orange-400 peer-checked:border-orange-500 peer-checked:bg-orange-50">
                             <i class="fa-solid fa-compact-disc text-2xl text-gray-700"></i>
-                            <span class="mt-2 text-[11px] font-bold">Brake Repair</span>
-                            <span class="mt-1 text-[9px] text-gray-500">Inspection & replacement</span>
+                            <span class="mt-2 text-[13px] font-bold">Brake Repair</span>
+                            <span class="mt-1 text-[11px] text-gray-500">Inspection & replacement</span>
                         </div>
-                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] text-white peer-checked:flex">
+                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-[#E89000] text-[10px] text-white peer-checked:flex">
                             <i class="fa-solid fa-check"></i>
                         </span>
                     </label>
@@ -117,10 +117,10 @@
                         <input type="checkbox" name="services[]" value="Vehicle Cleaning" class="peer sr-only">
                         <div class="flex h-[105px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-1 text-center shadow-sm transition-all hover:border-orange-400 peer-checked:border-orange-500 peer-checked:bg-orange-50">
                             <i class="fa-solid fa-car text-2xl text-gray-700"></i>
-                            <span class="mt-2 text-[11px] font-bold">Vehicle Cleaning</span>
-                            <span class="mt-1 text-[9px] text-gray-500">Interior & exterior cleaning</span>
+                            <span class="mt-2 text-[13px] font-bold">Vehicle Cleaning</span>
+                            <span class="mt-1 text-[11px] text-gray-500">Interior & exterior cleaning</span>
                         </div>
-                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] text-white peer-checked:flex">
+                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-[#E89000] text-[10px] text-white peer-checked:flex">
                             <i class="fa-solid fa-check"></i>
                         </span>
                     </label>
@@ -129,10 +129,10 @@
                         <input type="checkbox" name="services[]" value="Battery Service" class="peer sr-only">
                         <div class="flex h-[105px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-1 text-center shadow-sm transition-all hover:border-orange-400 peer-checked:border-orange-500 peer-checked:bg-orange-50">
                             <i class="fa-solid fa-car-battery text-2xl text-gray-700"></i>
-                            <span class="mt-2 text-[11px] font-bold">Battery Service</span>
-                            <span class="mt-1 text-[9px] text-gray-500">Battery check & replacement</span>
+                            <span class="mt-2 text-[13px] font-bold">Battery Service</span>
+                            <span class="mt-1 text-[11px] text-gray-500">Battery check & replacement</span>
                         </div>
-                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] text-white peer-checked:flex">
+                        <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-[#E89000] text-[10px] text-white peer-checked:flex">
                             <i class="fa-solid fa-check"></i>
                         </span>
                     </label>
@@ -141,8 +141,8 @@
                         <input type="checkbox" name="services[]" value="AC Service" class="peer sr-only">
                         <div class="flex h-[105px] flex-col items-center justify-center rounded-lg border border-gray-200 bg-white px-1 text-center shadow-sm transition-all hover:border-orange-400 peer-checked:border-orange-500 peer-checked:bg-orange-50">
                             <i class="fa-solid fa-snowflake text-2xl text-gray-700"></i>
-                            <span class="mt-2 text-[11px] font-bold">AC Service</span>
-                            <span class="mt-1 text-[9px] text-gray-500">Cooling system service</span>
+                            <span class="mt-2 text-[13px] font-bold">AC Service</span>
+                            <span class="mt-1 text-[11px] text-gray-500">Cooling system service</span>
                         </div>
                         <span class="absolute right-2 top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] text-white peer-checked:flex">
                             <i class="fa-solid fa-check"></i>
@@ -155,11 +155,11 @@
                 <!-- DATE -->
                 <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                     <h2 class="mb-4 flex items-center gap-2 text-base font-bold">
-                        <i class="fa-regular fa-calendar-days text-orange-500"></i>
+                        <i class="fa-regular fa-calendar-days text-[#E89000]"></i>
                         Choose Date
                     </h2>
                     <label for="appointment_date" class="mb-2 block text-xs font-semibold">Appointment Date <span class="text-red-500">*</span></label>
-                    <div class="flex h-10 items-center gap-2 rounded-lg border border-gray-300 px-3 focus-within:border-orange-500">
+                    <div class="flex h-10 items-center gap-2 rounded-lg border border-gray-300 px-3 focus-within:border-[#E89000]">
                         <i class="fa-regular fa-calendar text-gray-400"></i>
                         <input type="date" id="appointment_date" name="appointment_date" min="2026-11-01" required class="w-full bg-transparent text-xs outline-none">
                     </div>
@@ -167,53 +167,53 @@
                 <!-- TIME -->
                 <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                     <h2 class="mb-4 flex items-center gap-2 text-base font-bold">
-                        <i class="fa-regular fa-clock text-orange-500"></i>
+                        <i class="fa-regular fa-clock text-[#E89000]"></i>
                         Select Time
                     </h2>
                     <p class="mb-3 text-xs text-gray-500">Choose your preferred appointment time.</p>
                     <div class="grid grid-cols-3 gap-2">
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="09:00 AM" required class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">09:00 AM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">09:00 AM</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="09:30 AM" class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">09:30 AM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">09:30 AM</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="10:00 AM" class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">10:00 AM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">10:00 AM</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="10:30 AM" class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">10:30 AM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">10:30 AM</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="11:00 AM" class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">11:00 AM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">11:00 AM</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="11:30 AM" class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">11:30 AM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">11:30 AM</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="02:00 PM" class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">02:00 PM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">02:00 PM</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="02:30 PM" class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">02:30 PM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">02:30 PM</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="appointment_time" value="03:00 PM" class="peer sr-only">
-                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-orange-500 peer-checked:text-white hover:border-orange-400">03:00 PM</span>
+                            <span class="flex h-9 items-center justify-center rounded-full border border-gray-200 text-[10px] font-medium transition peer-checked:border-orange-500 peer-checked:bg-[#E89000] peer-checked:text-white hover:border-orange-400">03:00 PM</span>
                         </label>
                     </div>
                 </div>
                 <!-- ADDITIONAL NOTES -->
                 <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
                     <h2 class="mb-4 flex items-center gap-2 text-base font-bold">
-                        <i class="fa-regular fa-rectangle-list text-orange-500"></i>
+                        <i class="fa-regular fa-rectangle-list text-[#E89000]"></i>
                         Additional Notes
                     </h2>
                     <label for="additional_note" class="mb-2 block text-xs font-semibold">Describe the problem (Optional)</label>
@@ -226,9 +226,9 @@
                 <a href="homepage.html" class="flex h-11 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 text-xs font-semibold text-gray-600 shadow-sm transition hover:bg-gray-100">
                     <i class="fa-solid fa-arrow-left"></i>Cancel                       
                 </a>
-                <button type="submit" class="flex h-11 items-center justify-center gap-3 rounded-lg bg-orange-500 px-10 text-xs font-bold text-white shadow-sm transition hover:bg-orange-600 sm:min-w-[270px]">
-                    Next Step
-                    <i class="fa-solid fa-arrow-right"></i>
+                <button type="submit" class="flex h-11 items-center justify-center gap-3 rounded-lg bg-[#FFA500] px-4 text-xs font-bold text-white shadow-sm transition hover:bg-[#E89000] sm:min-w-[200px] cursor-pointer">
+                    <i class="fa-solid fa-arrow-up-from-bracket" style="color: rgb(255, 255, 255);"></i>
+                    Submmit
                 </button>
             </div>
         </form>
