@@ -285,7 +285,8 @@ require_role('mechanic');
         <!-- Table Footer -->
         <div class="flex flex-col gap-3 border-t border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <p class="text-xs text-gray-500">
-                Showing <span class="font-semibold text-gray-800">1–3</span> of <span class="font-semibold text-gray-800">3</span> jobs
+                Showing <span class="font-semibold text-
+                gray-800">1–3</span> of <span class="font-semibold text-gray-800">3</span> jobs
             </p>
 
             <!-- Pagination -->
