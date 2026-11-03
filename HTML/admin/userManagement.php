@@ -15,7 +15,7 @@
     <aside class="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col overflow-y-auto bg-gray-950 text-white shadow-xl lg:flex">
         <!-- Logo -->
         <div class="border-b border-white/10 px-5 py-5">
-            <a href="admin-dashboard.html" class="flex items-center gap-3">
+            <a href="../homepage.php" class="flex items-center gap-3">
                 <img src="../../MEDIA/AutoPulse Automotive Service Logo.png" alt="AutoPulse Logo" class="h-15 w-15 rounded-lg object-contain">
                 <div>
                     <h1 class="text-xl font-bold tracking-tight">Auto<span class="text-[#E89000]">Pulse</span></h1>
