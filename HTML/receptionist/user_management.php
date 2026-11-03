@@ -60,28 +60,6 @@
                     </a>
                 </li>
 
-                <!-- Inventory -->
-                <li>
-                    <a href="inventory.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
-                        <span class="flex items-center gap-3">
-                            <i class="fa-solid fa-boxes-stacked w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
-                            Inventory
-                        </span>
-                        <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
-                    </a>
-                </li>
-
-                <!-- Job Cards -->
-                <li>
-                    <a href="job-cards.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
-                        <span class="flex items-center gap-3">
-                            <i class="fa-solid fa-file-circle-check w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
-                            Job Cards
-                        </span>
-                        <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
-                    </a>
-                </li>
-
                 <!-- Reports -->
                 <li>
                     <a href="reports.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">

@@ -63,28 +63,6 @@
                     </a>
                 </li>
 
-                <!-- Inventory -->
-                <li>
-                    <a href="inventory.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
-                        <span class="flex items-center gap-3">
-                            <i class="fa-solid fa-boxes-stacked w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
-                            Inventory
-                        </span>
-                        <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
-                    </a>
-                </li>
-
-                <!-- Job Cards -->
-                <li>
-                    <a href="job-cards.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
-                        <span class="flex items-center gap-3">
-                            <i class="fa-solid fa-file-circle-check w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
-                            Job Cards
-                        </span>
-                        <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
-                    </a>
-                </li>
-
                 <!-- Reports -->
                 <li>
                     <a href="reports.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
@@ -278,8 +256,6 @@
 
 <!-- Receptionist Dashboard Statistics -->
 
-<!-- Reception Dashboard Status Cards -->
-
 <!-- Reception Dashboard Status Overview -->
 <section class="mb-6">
 
@@ -465,7 +441,111 @@
 
 </section>
 
+<!-- Quick Actions -->
+<section class="mt-6">
 
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+
+        <!-- Header -->
+        <div class="border-b border-gray-100 px-5 py-4">
+
+            <div class="flex items-center gap-3">
+
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-100">
+                    <i class="fa-solid fa-bolt text-lg text-[#E89000]"></i>
+                </div>
+
+                <div>
+                    <h2 class="text-base font-bold text-gray-900">
+                        Quick Actions
+                    </h2>
+
+                    <p class="mt-0.5 text-xs text-gray-500">
+                        Frequently used receptionist actions
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Action Cards -->
+        <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-2 xl:grid-cols-3">
+
+            <!-- Register Client -->
+            <a href="../register.php"
+               class="group flex flex-col items-center rounded-xl border border-gray-200 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#E89000] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E89000]">
+
+                <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-100">
+                    <i class="fa-solid fa-user-plus text-3xl text-[#E89000]"></i>
+                </div>
+
+                <h3 class="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#E89000]">
+                    Register Client
+                </h3>
+
+                <p class="mt-2 max-w-xs text-sm leading-relaxed text-gray-500">
+                    Create a new customer profile and store contact details.
+                </p>
+
+                <div class="mt-5 flex items-center gap-2 text-sm font-semibold text-[#E89000]">
+                    <span>Get Started</span>
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                </div>
+
+            </a>
+
+            <!-- Create Job Card -->
+            <a href="create-job-card.php"
+               class="group flex flex-col items-center rounded-xl border border-gray-200 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#E89000] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E89000]">
+
+                <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-100">
+                    <i class="fa-solid fa-clipboard-list text-3xl text-[#E89000]"></i>
+                </div>
+
+                <h3 class="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#E89000]">
+                    Create Job Card
+                </h3>
+
+                <p class="mt-2 max-w-xs text-sm leading-relaxed text-gray-500">
+                    Create a new service request and assign vehicle details.
+                </p>
+
+                <div class="mt-5 flex items-center gap-2 text-sm font-semibold text-[#E89000]">
+                    <span>Get Started</span>
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                </div>
+
+            </a>
+
+            <!-- Create Invoice -->
+            <a href="create-invoice.php"
+               class="group flex flex-col items-center rounded-xl border border-gray-200 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#E89000] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E89000]">
+
+                <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-100">
+                    <i class="fa-solid fa-file-invoice-dollar text-3xl text-[#E89000]"></i>
+                </div>
+
+                <h3 class="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#E89000]">
+                    Create Invoice
+                </h3>
+
+                <p class="mt-2 max-w-xs text-sm leading-relaxed text-gray-500">
+                    Generate a customer invoice for completed vehicle services.
+                </p>
+
+                <div class="mt-5 flex items-center gap-2 text-sm font-semibold text-[#E89000]">
+                    <span>Get Started</span>
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
 
         </div>
     </main>
