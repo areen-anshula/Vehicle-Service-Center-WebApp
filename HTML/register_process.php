@@ -29,5 +29,18 @@ $check_stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
 
     //Hash the password (for security)
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+//Insert data into the database
+$stmt = $conn->prepare("INSERT INTO users (full_name, email, phone, password, role) VALUES (?, ?, ?, ?, 'client')");
+    $stmt->bind_param("ssss", $full_name, $email, $phone, $hashed_password);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Account created successfully! Please sign in.'); window.location.href='login.php';</script>";
+    } else {
+        echo "<script>alert('Something went wrong. Please try again!'); window.history.back();</script>";
+    }
+
+    $stmt->close();
 }
+$conn->close();
 ?>
