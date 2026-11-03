@@ -15,7 +15,7 @@
     <aside class="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col overflow-y-auto bg-gray-950 text-white shadow-xl lg:flex">
         <!-- Logo -->
         <div class="border-b border-white/10 px-5 py-5">
-            <a href="admin-dashboard.html" class="flex items-center gap-3">
+            <a href="../homepage.php" class="flex items-center gap-3">
                 <img src="../../MEDIA/AutoPulse Automotive Service Logo.png" alt="AutoPulse Logo" class="h-15 w-15 rounded-lg object-contain">
                 <div>
                     <h1 class="text-xl font-bold tracking-tight">Auto<span class="text-[#E89000]">Pulse</span></h1>
@@ -43,7 +43,7 @@
 
                 <!-- User Management -->
                 <li>
-                    <a href="user-management.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="userManagement.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-users w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             User Management
@@ -170,7 +170,7 @@
                 <h3 class="text-sm font-bold text-gray-900">Notifications</h3>
                 <p class="mt-0.5 text-[11px] text-gray-500">You have 3 unread notifications</p>
             </div>
-            <button type="button" class="text-[11px] font-semibold text-[#E89000] hover:text-orange-600">
+            <button type="button" class="text-[11px] font-semibold text-[#FFA500] hover:text-[#E89000] cursor-pointer">
                 Mark all as read
             </button>
         </div>
@@ -247,7 +247,7 @@
 
         <!-- Footer -->
         <div class="border-t border-gray-100 p-3 text-center">
-            <a href="#" class="text-xs font-semibold text-[#E89000] transition hover:text-orange-600">
+            <a href="#" class="text-xs font-semibold text-[#FFA500] transition hover:text-[#E89000]">
                 View All Notifications
                 <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
             </a>
