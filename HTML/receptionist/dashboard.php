@@ -496,7 +496,7 @@
             </a>
 
             <!-- Create Job Card -->
-            <a href="create-job-card.php"
+            <a href="../book_appointment.php"
                class="group flex flex-col items-center rounded-xl border border-gray-200 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#E89000] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E89000]">
 
                 <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-100">
