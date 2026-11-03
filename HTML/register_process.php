@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'database.php';
+include '../PHP/database.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $full_name        = trim($_POST['fullname']);
