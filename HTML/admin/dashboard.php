@@ -43,7 +43,7 @@
 
                 <!-- User Management -->
                 <li>
-                    <a href="user-management.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="userManagement.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-users w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             User Management
