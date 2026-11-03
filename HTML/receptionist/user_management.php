@@ -32,7 +32,7 @@
             <ul class="space-y-1">
                 <!-- Dashboard -->
                 <li>
-                    <a href="admin-dashboard.html" class="group flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="dashboard.php" class="group flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <i class="fa-solid fa-table-columns w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                         Dashboard
                     </a>
@@ -40,7 +40,7 @@
 
                 <!-- User Management - Active -->
                 <li>
-                    <a href="userManagement.php" class="flex items-center justify-between rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
+                    <a href="user_management.php" class="flex items-center justify-between rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-users w-4 text-center"></i>
                             User Management
@@ -51,7 +51,7 @@
 
                 <!-- Services -->
                 <li>
-                    <a href="service-management.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="services.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-screwdriver-wrench w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Services

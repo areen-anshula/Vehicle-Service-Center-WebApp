@@ -35,7 +35,7 @@
 
                 <!-- Dashboard -->
                 <li>
-                    <a href="admin-dashboard.html" class="flex items-center gap-3 rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
+                    <a href="dashboard.php" class="flex items-center gap-3 rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
                         <i class="fa-solid fa-table-columns w-4 text-center"></i>
                         Dashboard
                     </a>
@@ -43,7 +43,7 @@
 
                 <!-- User Management -->
                 <li>
-                    <a href="userManagement.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="user_management.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-users w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             User Management
@@ -54,7 +54,7 @@
 
                 <!-- Services -->
                 <li>
-                    <a href="service-management.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="services.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-screwdriver-wrench w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Services
@@ -465,215 +465,6 @@
 
 </section>
 
-
-
-
-
-
-<!-- Recent Job Cards -->
-<section class="mt-6">
-    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-
-        <!-- Header -->
-        <div class="flex flex-col gap-3 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-100">
-                    <i class="fa-solid fa-clipboard-list text-lg text-[#E89000]"></i>
-                </div>
-                <div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <h2 class="text-base font-bold text-gray-900">Recent Job Cards</h2>
-                        <span class="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-semibold text-[#E89000]">32 Total</span>
-                    </div>
-                    <p class="mt-0.5 text-xs text-gray-500">Latest service requests and repair activities</p>
-                </div>
-            </div>
-
-            <a href="#" class="inline-flex items-center gap-2 text-xs font-semibold text-[#E89000] transition hover:text-[#FFA500]">
-                View All Job Cards
-                <i class="fa-solid fa-arrow-right text-[10px]"></i>
-            </a>
-        </div>
-
-        <!-- Search & Filter -->
-        <div class="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center">
-            <div class="relative flex-1">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-gray-400"></i>
-                <input
-                    type="text"
-                    placeholder="Search by Job Card ID..."
-                    class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-3 text-xs text-gray-700 outline-none transition placeholder:text-gray-400 focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-            </div>
-
-            <div class="flex flex-col gap-2 sm:flex-row">
-                <select class="h-10 rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-600 outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
-                    <option>All Statuses</option>
-                    <option>Assigned</option>
-                    <option>In Progress</option>
-                    <option>Completed</option>
-                    <option>Closed</option>
-                </select>
-
-                <button class="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#FFA500] px-4 text-xs font-semibold text-white transition hover:bg-[#E89000] cursor-pointer">
-                    <i class="fa-solid fa-filter text-[10px]"></i>
-                    Filter
-                </button>
-            </div>
-        </div>
-
-        <!-- Table -->
-        <div class="overflow-x-auto">
-            <table class="w-full min-w-[950px] text-left">
-                <thead>
-                    <tr class="border-y border-gray-100 bg-gray-50">
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">Job Card ID</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">Customer</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">Vehicle No.</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">Assigned Mechanic</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">Created Date</th>
-                        <th class="px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-500">Status</th>
-                        <th class="px-5 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-gray-500">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody class="divide-y divide-gray-100 text-xs text-gray-600">
-
-                    <!-- Row 1 -->
-                    <tr class="transition hover:bg-orange-50/30">
-                        <td class="px-5 py-3.5">
-                            <span class="font-bold text-gray-900">JC-0048</span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <div class="font-semibold text-gray-800">Nimal Shanaka</div>
-                            <span class="mt-0.5 block text-[10px] text-gray-400">Customer</span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-2 font-medium text-gray-700">
-                                <i class="fa-solid fa-car text-[11px] text-gray-400"></i>
-                                WP-KK-1234
-                            </span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <div class="flex items-center gap-2">
-                                <div class="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-600">RP</div>
-                                <span class="font-medium text-gray-700">Ruwan Perera</span>
-                            </div>
-                        </td>
-                        <td class="px-5 py-3.5 text-gray-500">24 Apr 2025</td>
-                        <td class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-semibold text-blue-600">
-                                <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
-                                Assigned
-                            </span>
-                        </td>
-                        <td class="px-5 py-3.5 text-center">
-                            <a href="#" class="inline-flex items-center gap-1.5 rounded-md border border-orange-200 px-3 py-1.5 text-[11px] font-semibold text-[#E89000] transition hover:border-[#E89000] hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-eye"></i>
-                                View
-                            </a>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 -->
-                    <tr class="transition hover:bg-orange-50/30">
-                        <td class="px-5 py-3.5">
-                            <span class="font-bold text-gray-900">JC-0047</span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <div class="font-semibold text-gray-800">Sithara Fernando</div>
-                            <span class="mt-0.5 block text-[10px] text-gray-400">Customer</span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-2 font-medium text-gray-700">
-                                <i class="fa-solid fa-car text-[11px] text-gray-400"></i>
-                                WP-AB-5678
-                            </span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <div class="flex items-center gap-2">
-                                <div class="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-[10px] font-bold text-purple-600">KJ</div>
-                                <span class="font-medium text-gray-700">Kasun Jayasinghe</span>
-                            </div>
-                        </td>
-                        <td class="px-5 py-3.5 text-gray-500">23 Apr 2025</td>
-                        <td class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-2.5 py-1 text-[10px] font-semibold text-orange-600">
-                                <span class="h-1.5 w-1.5 rounded-full bg-orange-500"></span>
-                                In Progress
-                            </span>
-                        </td>
-                        <td class="px-5 py-3.5 text-center">
-                            <a href="#" class="inline-flex items-center gap-1.5 rounded-md border border-orange-200 px-3 py-1.5 text-[11px] font-semibold text-[#E89000] transition hover:border-[#E89000] hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-eye"></i>
-                                View
-                            </a>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 -->
-                    <tr class="transition hover:bg-orange-50/30">
-                        <td class="px-5 py-3.5">
-                            <span class="font-bold text-gray-900">JC-0046</span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <div class="font-semibold text-gray-800">Kasun Perera</div>
-                            <span class="mt-0.5 block text-[10px] text-gray-400">Customer</span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-2 font-medium text-gray-700">
-                                <i class="fa-solid fa-car text-[11px] text-gray-400"></i>
-                                WP-BB-9012
-                            </span>
-                        </td>
-                        <td class="px-5 py-3.5">
-                            <div class="flex items-center gap-2">
-                                <div class="flex h-7 w-7 items-center justify-center rounded-full bg-green-100 text-[10px] font-bold text-green-600">MS</div>
-                                <span class="font-medium text-gray-700">Malith Silva</span>
-                            </div>
-                        </td>
-                        <td class="px-5 py-3.5 text-gray-500">22 Apr 2025</td>
-                        <td class="px-5 py-3.5">
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-semibold text-green-600">
-                                <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
-                                Completed
-                            </span>
-                        </td>
-                        <td class="px-5 py-3.5 text-center">
-                            <a href="#" class="inline-flex items-center gap-1.5 rounded-md border border-orange-200 px-3 py-1.5 text-[11px] font-semibold text-[#E89000] transition hover:border-[#E89000] hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-eye"></i>
-                                View
-                            </a>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Footer / Pagination -->
-        <div class="flex flex-col gap-3 border-t border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <p class="text-[11px] text-gray-500">
-                Showing <span class="font-semibold text-gray-800">1–3</span> of <span class="font-semibold text-gray-800">32</span> job cards
-            </p>
-
-            <div class="flex items-center gap-1.5">
-                <button disabled class="flex h-8 items-center gap-1 rounded-md border border-gray-200 px-3 text-[11px] font-medium text-gray-400 disabled:cursor-not-allowed">
-                    <i class="fa-solid fa-chevron-left text-[9px]"></i>
-                    Previous
-                </button>
-                <button class="flex h-8 w-8 items-center justify-center rounded-md bg-[#E89000] text-xs font-semibold text-white">1</button>
-                <button class="flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 text-xs font-medium text-gray-600 transition hover:border-orange-300 hover:text-[#E89000]">2</button>
-                <button class="flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 text-xs font-medium text-gray-600 transition hover:border-orange-300 hover:text-[#E89000]">3</button>
-                <span class="px-1 text-xs text-gray-400">...</span>
-                <button class="flex h-8 items-center gap-1 rounded-md border border-gray-200 px-3 text-[11px] font-medium cursor-pointer text-gray-600 transition hover:border-orange-300 hover:text-[#E89000]">
-                    Next
-                    <i class="fa-solid fa-chevron-right text-[9px]"></i>
-                </button>
-            </div>
-        </div>
-
-    </div>
-</section>
 
 
         </div>

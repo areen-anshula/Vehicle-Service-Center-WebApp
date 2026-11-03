@@ -34,15 +34,18 @@
 
                 <!-- Dashboard -->
                 <li>
-                    <a href="admin-dashboard.html" class="group flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
-                        <i class="fa-solid fa-table-columns w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
-                        Dashboard
+                    <a href="dashboard.php" class="group flex items-center gap-3 justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                        <span class="flex items-center gap-3">    
+                            <i class="fa-solid fa-table-columns w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
+                            Dashboard
+                        </span> 
+                        <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>   
                     </a>
                 </li>
 
                 <!-- User Management -->
                 <li>
-                    <a href="userManagement.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="user_management.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-users w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             User Management
@@ -53,7 +56,7 @@
 
                 <!-- Services - Active -->
                 <li>
-                    <a href="service-management.html" class="flex items-center justify-between rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
+                    <a href="services.php" class="flex items-center justify-between rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-screwdriver-wrench w-4 text-center"></i>
                             Services
@@ -139,7 +142,7 @@
             <div class="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
 
                 <div>
-                    <h2 class="text-lg font-bold text-gray-900 sm:text-xl">Receptionist Dashboard</h2>
+                    <h2 class="text-lg font-bold text-gray-900 sm:text-xl">Admin Dashboard</h2>
                     <p class="mt-0.5 text-[11px] text-gray-500">
                         Welcome back, <span class="font-semibold text-[#E89000]">Admin</span>
                     </p>
@@ -337,11 +340,6 @@
                             <p class="mt-0.5 text-xs text-gray-500">Browse service details, pricing and availability</p>
                         </div>
                     </div>
-
-                    <a href="#add-service" class="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#E89000] px-4 text-xs font-semibold text-white shadow-sm transition hover:bg-orange-600">
-                        <i class="fa-solid fa-plus text-[10px]"></i>
-                        Add New Service
-                    </a>
                 </div>
 
                 <!-- Search and Filters -->
@@ -382,7 +380,7 @@
                 <div class="grid grid-cols-1 gap-4 border-t border-gray-100 bg-gray-50/50 p-5 sm:grid-cols-2 xl:grid-cols-3">
 
                     <!-- Service 1 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-orange-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-orange-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-[#E89000] transition group-hover:bg-[#E89000] group-hover:text-white">
                                 <i class="fa-solid fa-oil-can text-xl"></i>
@@ -408,9 +406,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=1" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=1" aria-label="View Engine Oil Change" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -418,7 +413,7 @@
                     </article>
 
                     <!-- Service 2 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-blue-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-blue-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                                 <i class="fa-solid fa-car-battery text-xl"></i>
@@ -443,9 +438,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=2" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=2" aria-label="View Battery Inspection" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -453,7 +445,7 @@
                     </article>
 
                     <!-- Service 3 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-green-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-green-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600 transition group-hover:bg-green-600 group-hover:text-white">
                                 <i class="fa-solid fa-car-side text-xl"></i>
@@ -478,9 +470,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=3" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=3" aria-label="View Full Vehicle Service" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -488,7 +477,7 @@
                     </article>
 
                     <!-- Service 4 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-purple-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-purple-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-600 transition group-hover:bg-purple-600 group-hover:text-white">
                                 <i class="fa-solid fa-gears text-xl"></i>
@@ -513,9 +502,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=4" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=4" aria-label="View Engine Diagnostics" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -523,7 +509,7 @@
                     </article>
 
                     <!-- Service 5 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 transition group-hover:bg-cyan-600 group-hover:text-white">
                                 <i class="fa-solid fa-snowflake text-xl"></i>
@@ -548,9 +534,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=5" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=5" aria-label="View AC Service" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -558,7 +541,7 @@
                     </article>
 
                     <!-- Service 6 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-yellow-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-yellow-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600 transition group-hover:bg-yellow-500 group-hover:text-white">
                                 <i class="fa-solid fa-car-burst text-xl"></i>
@@ -583,9 +566,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=6" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=6" aria-label="View Brake Inspection" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -593,7 +573,7 @@
                     </article>
 
                     <!-- Service 7 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 transition group-hover:bg-indigo-600 group-hover:text-white">
                                 <i class="fa-solid fa-car-rear text-xl"></i>
@@ -618,9 +598,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=7" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=7" aria-label="View Full Vehicle Wash" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -628,7 +605,7 @@
                     </article>
 
                     <!-- Service 8 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-pink-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-pink-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-pink-50 text-pink-600 transition group-hover:bg-pink-600 group-hover:text-white">
                                 <i class="fa-solid fa-car-burst text-xl"></i>
@@ -653,9 +630,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=8" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=8" aria-label="View Body and Paint Repair" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -663,7 +637,7 @@
                     </article>
 
                     <!-- Service 9 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-teal-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-teal-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-600 transition group-hover:bg-teal-600 group-hover:text-white">
                                 <i class="fa-solid fa-gauge-high text-xl"></i>
@@ -688,9 +662,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=9" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=9" aria-label="View Wheel Alignment" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -698,7 +669,7 @@
                     </article>
 
                     <!-- Service 10 -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-300 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-300 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-red-500 transition group-hover:bg-red-500 group-hover:text-white">
                                 <i class="fa-solid fa-car text-xl"></i>
@@ -723,9 +694,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=10" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=10" aria-label="View Vehicle Safety Inspection" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -733,7 +701,7 @@
                     </article>
 
                     <!-- Service 11 - Inactive -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gray-400 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gray-400 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 text-gray-500 transition group-hover:bg-gray-700 group-hover:text-white">
                                 <i class="fa-solid fa-wheelchair text-xl"></i>
@@ -758,9 +726,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=11" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=11" aria-label="View Tyre Replacement" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -768,7 +733,7 @@
                     </article>
 
                     <!-- Service 12 - Inactive -->
-                    <article class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gray-400 hover:shadow-md">
+                    <article class="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gray-400 hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 text-gray-500 transition group-hover:bg-gray-700 group-hover:text-white">
                                 <i class="fa-solid fa-spray-can-sparkles text-xl"></i>
@@ -793,9 +758,6 @@
                             </div>
                         </div>
                         <div class="mt-4 flex gap-2">
-                            <a href="edit-service.php?id=12" class="flex h-9 flex-1 items-center justify-center gap-2 rounded-lg border border-orange-200 text-[11px] font-semibold text-[#E89000] transition hover:bg-[#E89000] hover:text-white">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Service
-                            </a>
                             <a href="view-service.php?id=12" aria-label="View Interior Detailing" class="flex h-9 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition hover:border-gray-400 hover:text-gray-800">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
@@ -823,81 +785,6 @@
                     </div>
                 </div>
 
-            </section>
-
-            <!-- Add New Service -->
-            <section id="add-service" class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-
-                <div class="flex items-center gap-3 border-b border-gray-100 px-5 py-4">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-[#E89000]">
-                        <i class="fa-solid fa-plus text-lg"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-base font-bold text-gray-900">Add New Service</h2>
-                        <p class="mt-0.5 text-xs text-gray-500">Add a new service to the available services list</p>
-                    </div>
-                </div>
-
-                <form action="add-service.php" method="POST" class="space-y-5 p-5">
-
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-
-                        <div>
-                            <label for="service-name" class="mb-1.5 block text-xs font-semibold text-gray-700">Service Name</label>
-                            <input id="service-name" name="service_name" type="text" placeholder="Enter service name" required class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-                        </div>
-
-                        <div>
-                            <label for="service-category" class="mb-1.5 block text-xs font-semibold text-gray-700">Service Category</label>
-                            <select id="service-category" name="category" required class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-                                <option value="">Select Category</option>
-                                <option value="maintenance">Maintenance</option>
-                                <option value="repair">Repair</option>
-                                <option value="inspection">Inspection</option>
-                                <option value="cleaning">Cleaning</option>
-                                <option value="electrical">Electrical</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="service-price" class="mb-1.5 block text-xs font-semibold text-gray-700">Service Price (Rs.)</label>
-                            <input id="service-price" name="price" type="number" min="0" step="0.01" placeholder="Enter service price" required class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-                        </div>
-
-                        <div>
-                            <label for="service-duration" class="mb-1.5 block text-xs font-semibold text-gray-700">Estimated Duration</label>
-                            <input id="service-duration" name="duration" type="text" placeholder="e.g. 1 hour, 45 minutes" required class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <label for="service-description" class="mb-1.5 block text-xs font-semibold text-gray-700">Service Description</label>
-                            <textarea id="service-description" name="description" rows="3" placeholder="Describe what this service includes..." required class="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100"></textarea>
-                        </div>
-
-                        <div>
-                            <label for="service-status" class="mb-1.5 block text-xs font-semibold text-gray-700">Service Status</label>
-                            <select id="service-status" name="status" class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
-                        <button type="reset" class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-200 px-5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50">
-                            <i class="fa-solid fa-rotate-left"></i>
-                            Clear Form
-                        </button>
-
-                        <button type="submit" class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#E89000] px-5 text-xs font-semibold text-white shadow-sm transition hover:bg-orange-600">
-                            <i class="fa-solid fa-plus"></i>
-                            Add Service
-                        </button>
-                    </div>
-
-                </form>
             </section>
 
         </div>
