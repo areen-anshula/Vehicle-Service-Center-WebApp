@@ -22,5 +22,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('Please fill in all required fields!'); window.history.back();</script>";
         exit();
     }
+    $stmt = $conn->prepare("INSERT INTO appointment (user_id, vehicle_registration_number, brand, model, manufacture_year, date, time, additional_note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssssss", $user_id, $registration, $brand, $model, $year, $appointment_date, $appointment_time, $additional_note);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Appointment booked successfully!'); window.location.href='book_appointment.php';</script>";
+    } else {
+        echo "<script>alert('Something went wrong. Please try again!'); window.history.back();</script>";
+    }
+
+    $stmt->close();
 }
+$conn->close();
 ?>
