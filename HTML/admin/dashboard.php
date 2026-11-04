@@ -331,7 +331,7 @@ include "../../PHP/admin_dashboard_backend.php";
                     </div>
                     <div>
                         <p class="text-[11px] font-medium text-gray-500">Active Job Cards</p>
-                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">32</h3>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900"><?php echo $active_jobs_cards; ?></h3>
                     </div>
                 </div>
                 <i class="fa-solid fa-clipboard-list text-sm text-green-600"></i>
@@ -350,7 +350,7 @@ include "../../PHP/admin_dashboard_backend.php";
                     </div>
                     <div>
                         <p class="text-[11px] font-medium text-gray-500">Total Spare Parts</p>
-                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">1,250</h3>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900"><?php echo $spare_parts_count; ?></h3>
                     </div>
                 </div>
                 <i class="fa-solid fa-boxes-stacked text-sm text-red-500"></i>
