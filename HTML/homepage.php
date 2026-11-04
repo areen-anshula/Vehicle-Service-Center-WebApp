@@ -522,24 +522,24 @@
             <div class="w-full rounded-xl bg-white p-6 md:p-7 shadow-lg border border-gray-100">
                 <h3 class="mb-5 text-xl font-bold text-gray-800">Send Us a Message</h3>
 
-                <form class="space-y-4">
+                <form class="space-y-4" action="contact_process.php" method="POST">
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <input
                             type="text"
                             placeholder="Your Name"
-                            class="h-12 w-full rounded-lg border border-gray-300 px-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+                            class="h-12 w-full rounded-lg border border-gray-300 px-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100" name="name">
 
                         <input
                             type="email"
                             placeholder="Your Email"
-                            class="h-12 w-full rounded-lg border border-gray-300 px-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+                            class="h-12 w-full rounded-lg border border-gray-300 px-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100"name="email">
                     </div>
 
                     <textarea
                         rows="5"
                         placeholder="Your Message"
-                        class="w-full resize-none rounded-lg border border-gray-300 p-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100"></textarea>
+                        class="w-full resize-none rounded-lg border border-gray-300 p-4 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100" name="message"></textarea>
 
                     <button
                         type="submit"
