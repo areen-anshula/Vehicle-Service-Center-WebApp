@@ -1,3 +1,7 @@
+<?php
+include "../../PHP/admin_dashboard_backend.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -289,7 +293,7 @@
                     </div>
                     <div>
                         <p class="text-[11px] font-medium text-gray-500">Total Customers</p>
-                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">245</h3>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900"><?php echo $clients_count; ?></h3>
                     </div>
                 </div>
                 <i class="fa-solid fa-arrow-trend-up text-sm text-[#E89000]"></i>
@@ -308,7 +312,7 @@
                     </div>
                     <div>
                         <p class="text-[11px] font-medium text-gray-500">Total Mechanics</p>
-                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">18</h3>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900"><?php echo $mechanics_count; ?></h3>
                     </div>
                 </div>
                 <i class="fa-solid fa-users text-sm text-blue-500"></i>
