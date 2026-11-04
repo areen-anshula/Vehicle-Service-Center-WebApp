@@ -259,25 +259,26 @@
 <!-- Reception Dashboard Status Overview -->
 <section class="mb-6">
 
-    <!-- Section Header -->
-    <div class="mb-5 flex items-center justify-between gap-3">
-        <div>
-            <h2 class="text-lg font-bold tracking-tight text-gray-900">
-                Service Status Overview
-            </h2>
-            <p class="mt-1 text-xs text-gray-500">
-                Monitor appointments, job progress and payments
-            </p>
-        </div>
+    <!-- Page Heading -->
+            <section class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-[#E89000]">
+                        <i class="fa-solid fa-screwdriver-wrench text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-gray-900">Service Management</h1>
+                        <p class="mt-0.5 text-xs text-gray-500">View and manage available vehicle services</p>
+                    </div>
+                </div>
 
-        <span class="hidden items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-[10px] font-semibold text-gray-600 sm:inline-flex">
-            <i class="fa-solid fa-chart-pie text-[#E89000]"></i>
-            Dashboard Summary
-        </span>
-    </div>
+                <div class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-[11px] text-gray-500 shadow-sm">
+                    <i class="fa-solid fa-house text-[#E89000]"></i>
+                    <span>Dashboard</span>
+                </div>
+            </section>
 
     <!-- 4 Column Grid -->
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 mt-5">
 
         <!-- Today's Appointments - Full Width -->
         <div class="group relative overflow-hidden rounded-2xl border border-orange-100 bg-gradient-to-br from-white to-orange-50/70 p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-100/60 sm:col-span-2 xl:col-span-4">

@@ -1,4 +1,6 @@
-
+<?php
+include "../../PHP/receptionist_services.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -258,7 +260,7 @@
                         </div>
                         <span class="rounded-full bg-orange-50 px-2.5 py-1 text-[10px] font-semibold text-[#E89000]">All Services</span>
                     </div>
-                    <h3 class="mt-3 text-2xl font-bold text-gray-900">12</h3>
+                    <h3 class="mt-3 text-2xl font-bold text-gray-900"><?php echo $total_services; ?></h3>
                     <p class="mt-0.5 text-xs font-semibold text-gray-700">Total Services</p>
                     <p class="mt-1 text-[10px] text-gray-400">Services listed in the system</p>
                 </div>
@@ -270,7 +272,7 @@
                         </div>
                         <span class="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-semibold text-green-600">Available</span>
                     </div>
-                    <h3 class="mt-3 text-2xl font-bold text-gray-900">10</h3>
+                    <h3 class="mt-3 text-2xl font-bold text-gray-900"><?php echo $active_services; ?></h3>
                     <p class="mt-0.5 text-xs font-semibold text-gray-700">Active Services</p>
                     <p class="mt-1 text-[10px] text-gray-400">Currently available for booking</p>
                 </div>
@@ -282,7 +284,7 @@
                         </div>
                         <span class="rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-semibold text-blue-600">Categories</span>
                     </div>
-                    <h3 class="mt-3 text-2xl font-bold text-gray-900">5</h3>
+                    <h3 class="mt-3 text-2xl font-bold text-gray-900"><?php echo $service_types_count; ?></h3>
                     <p class="mt-0.5 text-xs font-semibold text-gray-700">Service Categories</p>
                     <p class="mt-1 text-[10px] text-gray-400">Different types of services</p>
                 </div>
@@ -294,7 +296,7 @@
                         </div>
                         <span class="rounded-full bg-red-50 px-2.5 py-1 text-[10px] font-semibold text-red-500">Unavailable</span>
                     </div>
-                    <h3 class="mt-3 text-2xl font-bold text-gray-900">2</h3>
+                    <h3 class="mt-3 text-2xl font-bold text-gray-900"><?php echo $inactive_services; ?></h3>
                     <p class="mt-0.5 text-xs font-semibold text-gray-700">Inactive Services</p>
                     <p class="mt-1 text-[10px] text-gray-400">Currently unavailable services</p>
                 </div>

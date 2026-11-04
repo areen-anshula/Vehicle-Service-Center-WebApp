@@ -1,4 +1,6 @@
-
+<?php
+include "../../PHP/admin_dashboard_backend.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -251,7 +253,7 @@
                         </div>
                         <span class="rounded-full bg-orange-50 px-2.5 py-1 text-[10px] font-semibold text-[#E89000]">All Users</span>
                     </div>
-                    <h3 class="mt-3 text-2xl font-bold text-gray-900">248</h3>
+                    <h3 class="mt-3 text-2xl font-bold text-gray-900">135</h3>
                     <p class="mt-0.5 text-xs font-semibold text-gray-700">Total Customers</p>
                     <p class="mt-1 text-[10px] text-gray-400">Registered customer accounts</p>
                 </div>
@@ -264,7 +266,7 @@
                         </div>
                         <span class="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-semibold text-green-600">Active</span>
                     </div>
-                    <h3 class="mt-3 text-2xl font-bold text-gray-900">232</h3>
+                    <h3 class="mt-3 text-2xl font-bold text-gray-900"><?php echo "$clients_count"; ?></h3>
                     <p class="mt-0.5 text-xs font-semibold text-gray-700">Active Customers</p>
                     <p class="mt-1 text-[10px] text-gray-400">Currently active accounts</p>
                 </div>
@@ -277,7 +279,7 @@
                         </div>
                         <span class="rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-semibold text-blue-600">This Month</span>
                     </div>
-                    <h3 class="mt-3 text-2xl font-bold text-gray-900">18</h3>
+                    <h3 class="mt-3 text-2xl font-bold text-gray-900">14</h3>
                     <p class="mt-0.5 text-xs font-semibold text-gray-700">New Customers</p>
                     <p class="mt-1 text-[10px] text-gray-400">Recently registered customers</p>
                 </div>
@@ -290,7 +292,7 @@
                         </div>
                         <span class="rounded-full bg-red-50 px-2.5 py-1 text-[10px] font-semibold text-red-500">Inactive</span>
                     </div>
-                    <h3 class="mt-3 text-2xl font-bold text-gray-900">16</h3>
+                    <h3 class="mt-3 text-2xl font-bold text-gray-900">17</h3>
                     <p class="mt-0.5 text-xs font-semibold text-gray-700">Inactive Customers</p>
                     <p class="mt-1 text-[10px] text-gray-400">Currently inactive accounts</p>
                 </div>
@@ -566,7 +568,7 @@
                     </div>
                 </div>
 
-                <form action="update-customer.php" method="POST" class="space-y-5 p-5">
+                <form action="../../PHP/update_customer.php" method="POST" class="space-y-5 p-5">
 
                     <div class="flex flex-col gap-3 rounded-lg border border-orange-100 bg-orange-50/50 p-4 sm:flex-row sm:items-center">
                         <div class="flex h-11 w-11 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-[#E89000]">NS</div>
