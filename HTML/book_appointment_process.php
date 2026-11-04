@@ -17,5 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $appointment_time   = date("H:i:s", strtotime($raw_time)); 
 
     $additional_note    = trim($_POST['additional_note']);
+
+    if (empty($registration) || empty($brand) || empty($model) || empty($year) || empty($appointment_date) || empty($appointment_time)) {
+        echo "<script>alert('Please fill in all required fields!'); window.history.back();</script>";
+        exit();
+    }
 }
 ?>
