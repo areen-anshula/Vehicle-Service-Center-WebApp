@@ -497,27 +497,28 @@
             </a>
 
             <!-- Create Job Card -->
-            <a href="../book_appointment.php"
-               class="group flex flex-col items-center rounded-xl border border-gray-200 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#E89000] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E89000]">
+            <button
+    type="button"
+    id="openJobCardModal"
+    class="group flex cursor-pointer flex-col items-center rounded-xl border border-gray-200 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#E89000] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E89000]">
 
-                <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-100">
-                    <i class="fa-solid fa-clipboard-list text-3xl text-[#E89000]"></i>
-                </div>
+    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-100">
+        <i class="fa-solid fa-clipboard-list text-3xl text-[#E89000]"></i>
+    </div>
 
-                <h3 class="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#E89000]">
-                    Create Job Card
-                </h3>
+    <h3 class="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#E89000]">
+        Create Job Card
+    </h3>
 
-                <p class="mt-2 max-w-xs text-sm leading-relaxed text-gray-500">
-                    Create a new service request and assign vehicle details.
-                </p>
+    <p class="mt-2 max-w-xs text-sm leading-relaxed text-gray-500">
+        Create a new service request and assign vehicle details.
+    </p>
 
-                <div class="mt-5 flex items-center gap-2 text-sm font-semibold text-[#E89000]">
-                    <span>Get Started</span>
-                    <i class="fa-solid fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
-                </div>
-
-            </a>
+    <div class="mt-5 flex items-center gap-2 text-sm font-semibold text-[#E89000]">
+        <span>Get Started</span>
+        <i class="fa-solid fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
+    </div>
+</button>
 
             <!-- Create Invoice -->
             <a href="create-invoice.php"
@@ -551,6 +552,438 @@
         </div>
     </main>
 </div>
-</body>
 
+<!-- CREATE JOB CARD MODAL -->
+<div
+    id="jobCardModal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="jobCardModalTitle">
+
+    <div class="relative flex max-h-[95vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4 sm:px-6">
+            <div class="flex items-center gap-3">
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-[#E89000]">
+                    <i class="fa-solid fa-clipboard-list text-lg"></i>
+                </div>
+
+                <div>
+                    <h2 id="jobCardModalTitle" class="text-base font-bold text-gray-900 sm:text-lg">
+                        Create New Job Card
+                    </h2>
+                    <p class="mt-0.5 text-[11px] text-gray-500">
+                        Enter customer, vehicle and service information
+                    </p>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <button
+                type="button"
+                data-close-job-modal
+                aria-label="Close modal"
+                class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition hover:bg-red-50 hover:text-red-500">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Modal Form -->
+        <form
+            id="jobCardForm"
+            action="create-job-card.php"
+            method="POST"
+            class="flex min-h-0 flex-1 flex-col">
+
+            <!-- Scrollable Form Content -->
+            <div class="space-y-5 overflow-y-auto p-5 sm:p-6">
+
+                <!-- Job Card Information -->
+                <section>
+                    <div class="mb-3 flex items-center justify-between">
+                        <h3 class="text-xs font-bold uppercase tracking-wide text-gray-800">
+                            <i class="fa-solid fa-file-lines mr-2 text-[#E89000]"></i>
+                            Job Card Information
+                        </h3>
+
+                        <span class="rounded-full bg-orange-50 px-3 py-1 text-[10px] font-semibold text-[#E89000]">
+                            New Job
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <div>
+                            <label for="job-card-number" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Job Card Number
+                            </label>
+                            <input
+                                id="job-card-number"
+                                name="job_card_number"
+                                type="text"
+                                readonly
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-100 px-3 text-xs font-semibold text-gray-600 outline-none">
+                        </div>
+
+                        <div>
+                            <label for="job-date" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Job Date <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="job-date"
+                                name="job_date"
+                                type="date"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                    </div>
+                </section>
+
+                <div class="border-t border-gray-100"></div>
+
+                <!-- Customer Information -->
+                <section>
+                    <h3 class="mb-3 text-xs font-bold uppercase tracking-wide text-gray-800">
+                        <i class="fa-solid fa-user mr-2 text-[#E89000]"></i>
+                        Customer Information
+                    </h3>
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <div>
+                            <label for="customer-name" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Customer Name <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="customer-name"
+                                name="customer_name"
+                                type="text"
+                                placeholder="Enter customer name"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                        <div>
+                            <label for="customer-phone" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Contact Number <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="customer-phone"
+                                name="customer_phone"
+                                type="tel"
+                                placeholder="e.g. 0771234567"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="customer-email" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Email Address
+                            </label>
+                            <input
+                                id="customer-email"
+                                name="customer_email"
+                                type="email"
+                                placeholder="Enter customer email address"
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                    </div>
+                </section>
+
+                <div class="border-t border-gray-100"></div>
+
+                <!-- Vehicle Information -->
+                <section>
+                    <h3 class="mb-3 text-xs font-bold uppercase tracking-wide text-gray-800">
+                        <i class="fa-solid fa-car mr-2 text-[#E89000]"></i>
+                        Vehicle Information
+                    </h3>
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <div>
+                            <label for="vehicle-number" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Vehicle Registration Number <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="vehicle-number"
+                                name="vehicle_number"
+                                type="text"
+                                placeholder="e.g. ABC-1234"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs uppercase text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                        <div>
+                            <label for="vehicle-type" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Vehicle Type <span class="text-red-500">*</span>
+                            </label>
+                            <select
+                                id="vehicle-type"
+                                name="vehicle_type"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                                <option value="">Select vehicle type</option>
+                                <option value="Car">Car</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Van">Van</option>
+                                <option value="Motorcycle">Motorcycle</option>
+                                <option value="Three Wheeler">Three Wheeler</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="vehicle-make" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Vehicle Make <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="vehicle-make"
+                                name="vehicle_make"
+                                type="text"
+                                placeholder="e.g. Toyota"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                        <div>
+                            <label for="vehicle-model" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Vehicle Model <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="vehicle-model"
+                                name="vehicle_model"
+                                type="text"
+                                placeholder="e.g. Axio"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                    </div>
+                </section>
+
+                <div class="border-t border-gray-100"></div>
+
+                <!-- Service Details -->
+                <section>
+                    <h3 class="mb-3 text-xs font-bold uppercase tracking-wide text-gray-800">
+                        <i class="fa-solid fa-screwdriver-wrench mr-2 text-[#E89000]"></i>
+                        Service Details
+                    </h3>
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <div>
+                            <label for="job-service" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Select Service <span class="text-red-500">*</span>
+                            </label>
+                            <select
+                                id="job-service"
+                                name="service"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                                <option value="">Choose a service</option>
+                                <option value="Engine Oil Change">Engine Oil Change</option>
+                                <option value="Battery Inspection">Battery Inspection</option>
+                                <option value="Full Vehicle Service">Full Vehicle Service</option>
+                                <option value="Engine Diagnostics">Engine Diagnostics</option>
+                                <option value="AC Service">AC Service</option>
+                                <option value="Brake Inspection">Brake Inspection</option>
+                                <option value="Full Vehicle Wash">Full Vehicle Wash</option>
+                                <option value="Body & Paint Repair">Body & Paint Repair</option>
+                                <option value="Wheel Alignment">Wheel Alignment</option>
+                                <option value="Vehicle Safety Inspection">Vehicle Safety Inspection</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="job-priority" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Job Priority
+                            </label>
+                            <select
+                                id="job-priority"
+                                name="priority"
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                                <option value="Normal">Normal</option>
+                                <option value="High">High</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="appointment-time" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Appointment Time <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="appointment-time"
+                                name="appointment_time"
+                                type="time"
+                                required
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                        <div>
+                            <label for="assigned-mechanic" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Assign Mechanic
+                            </label>
+                            <select
+                                id="assigned-mechanic"
+                                name="mechanic"
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                                <option value="">Assign later</option>
+                                <option value="Mechanic 1">Mechanic 1</option>
+                                <option value="Mechanic 2">Mechanic 2</option>
+                                <option value="Mechanic 3">Mechanic 3</option>
+                            </select>
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="job-description" class="mb-1.5 block text-xs font-semibold text-gray-700">
+                                Problem Description / Customer Request
+                            </label>
+                            <textarea
+                                id="job-description"
+                                name="description"
+                                rows="3"
+                                placeholder="Describe the vehicle issue or requested service..."
+                                class="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100"></textarea>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Initial Status -->
+                <div class="flex items-start gap-3 rounded-lg border border-orange-100 bg-orange-50/70 p-3">
+                    <i class="fa-solid fa-circle-info mt-0.5 text-sm text-[#E89000]"></i>
+                    <div>
+                        <p class="text-xs font-semibold text-gray-800">Initial Job Status: Pending</p>
+                        <p class="mt-1 text-[10px] leading-relaxed text-gray-500">
+                            The job card will be created with a Pending status. It can be assigned and updated later.
+                        </p>
+                    </div>
+                </div>
+
+                <input type="hidden" name="status" value="Pending">
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex flex-col-reverse gap-2 border-t border-gray-100 bg-gray-50 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+
+                <button
+                    type="button"
+                    data-close-job-modal
+                    class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-5 text-xs font-semibold text-gray-600 transition hover:bg-gray-100">
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#E89000] px-5 text-xs font-semibold text-white shadow-sm transition hover:bg-orange-600">
+                    <i class="fa-solid fa-plus"></i>
+                    Create Job Card
+                </button>
+
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    const jobCardModal = document.getElementById("jobCardModal");
+    const openJobCardModal = document.getElementById("openJobCardModal");
+    const jobCardForm = document.getElementById("jobCardForm");
+    const jobCardNumber = document.getElementById("job-card-number");
+    const jobDate = document.getElementById("job-date");
+
+    // Generate a job card number for display and form submission
+    function generateJobCardNumber() {
+        const date = new Date();
+        const datePart = date.getFullYear().toString().slice(-2)
+            + String(date.getMonth() + 1).padStart(2, "0")
+            + String(date.getDate()).padStart(2, "0");
+
+        const randomPart = Math.floor(1000 + Math.random() * 9000);
+
+        return `JC-${datePart}-${randomPart}`;
+    }
+
+    // Open modal
+    function openModal() {
+        jobCardModal.classList.remove("hidden");
+        jobCardModal.classList.add("flex");
+        document.body.classList.add("overflow-hidden");
+
+        // Set today's date as the default job date
+        const today = new Date();
+        const localDate = new Date(
+            today.getTime() - today.getTimezoneOffset() * 60000
+        ).toISOString().split("T")[0];
+
+        jobDate.value = localDate;
+        jobDate.min = localDate;
+
+        // Generate a new job card number
+        jobCardNumber.value = generateJobCardNumber();
+
+        // Focus the first input
+        document.getElementById("customer-name").focus();
+    }
+
+    // Close modal
+    function closeModal() {
+        jobCardModal.classList.add("hidden");
+        jobCardModal.classList.remove("flex");
+        document.body.classList.remove("overflow-hidden");
+    }
+
+    // Open button
+    openJobCardModal.addEventListener("click", openModal);
+
+    // Close buttons
+    document.querySelectorAll("[data-close-job-modal]").forEach(button => {
+        button.addEventListener("click", closeModal);
+    });
+
+    // Close when clicking outside the modal content
+    jobCardModal.addEventListener("click", function (event) {
+        if (event.target === jobCardModal) {
+            closeModal();
+        }
+    });
+
+    // Close with Escape key
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !jobCardModal.classList.contains("hidden")) {
+            closeModal();
+        }
+    });
+
+    // Reset form when modal is closed
+    document.querySelectorAll("[data-close-job-modal]").forEach(button => {
+        button.addEventListener("click", function () {
+            jobCardForm.reset();
+        });
+    });
+
+    // Validate form before submission
+    jobCardForm.addEventListener("submit", function (event) {
+        if (!jobCardForm.checkValidity()) {
+            event.preventDefault();
+            jobCardForm.reportValidity();
+            return;
+        }
+
+        // Keep the generated job card number in the submitted form.
+        if (!jobCardNumber.value) {
+            jobCardNumber.value = generateJobCardNumber();
+        }
+    });
+</script>
 </html>

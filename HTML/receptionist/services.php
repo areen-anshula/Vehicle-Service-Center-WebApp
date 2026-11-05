@@ -122,9 +122,9 @@ include "../../PHP/receptionist_services.php";
             <div class="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
 
                 <div>
-                    <h2 class="text-lg font-bold text-gray-900 sm:text-xl">Admin Dashboard</h2>
+                    <h2 class="text-lg font-bold text-gray-900 sm:text-xl">Receptionist Dashboard</h2>
                     <p class="mt-0.5 text-[11px] text-gray-500">
-                        Welcome back, <span class="font-semibold text-[#E89000]">Admin</span>
+                        Welcome back, <span class="font-semibold text-[#E89000]">Receptionist</span>
                     </p>
                 </div>
 
