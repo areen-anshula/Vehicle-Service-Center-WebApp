@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2026 at 02:51 PM
+-- Generation Time: Nov 05, 2026 at 03:09 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -86,7 +86,7 @@ CREATE TABLE `job_cards` (
 --
 
 INSERT INTO `job_cards` (`id`, `appointment_id`, `mechanic_id`, `status`, `created_at`) VALUES
-(1, 0, 1, 'Assigned', '2026-11-05 13:43:20');
+(1, NULL, 1, 'Assigned', '2026-11-05 13:53:58');
 
 -- --------------------------------------------------------
 
@@ -227,7 +227,8 @@ ALTER TABLE `contact_messages`
 -- Indexes for table `job_cards`
 --
 ALTER TABLE `job_cards`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_jobcard_appointment` (`appointment_id`);
 
 --
 -- Indexes for table `job_card_parts`
@@ -339,8 +340,13 @@ ALTER TABLE `appointment`
 -- Constraints for table `appointment_services`
 --
 ALTER TABLE `appointment_services`
-  ADD CONSTRAINT `appointment_services_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `appointment_services_ibfk_2` FOREIGN KEY (`id`) REFERENCES `appointment` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_appointment_services_appointment` FOREIGN KEY (`appointment_id`) REFERENCES `appointment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `job_cards`
+--
+ALTER TABLE `job_cards`
+  ADD CONSTRAINT `fk_jobcard_appointment` FOREIGN KEY (`appointment_id`) REFERENCES `appointment` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `job_card_parts`
