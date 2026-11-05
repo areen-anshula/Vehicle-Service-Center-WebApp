@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2026 at 01:37 PM
+-- Generation Time: Nov 05, 2026 at 02:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -75,11 +75,18 @@ CREATE TABLE `contact_messages` (
 
 CREATE TABLE `job_cards` (
   `id` int(11) NOT NULL,
-  `appointment_id` int(11) NOT NULL,
+  `appointment_id` int(11) DEFAULT NULL,
   `mechanic_id` int(11) NOT NULL,
   `status` varchar(100) NOT NULL DEFAULT 'Assigned',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `job_cards`
+--
+
+INSERT INTO `job_cards` (`id`, `appointment_id`, `mechanic_id`, `status`, `created_at`) VALUES
+(1, 0, 1, 'Assigned', '2026-11-05 13:43:20');
 
 -- --------------------------------------------------------
 
@@ -114,10 +121,12 @@ CREATE TABLE `job_card_services` (
 
 CREATE TABLE `services` (
   `id` int(11) NOT NULL,
+  `service_name` varchar(100) DEFAULT NULL,
   `service_type` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `is_active()` tinyint(1) NOT NULL
+  `is_active` tinyint(1) NOT NULL,
+  `estimate_duration` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -146,6 +155,13 @@ CREATE TABLE `spare_parts` (
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `spare_parts`
+--
+
+INSERT INTO `spare_parts` (`id`, `part_name`, `description`, `part_price`, `quantity`) VALUES
+(1, 'Mercedes Head Lights : High Performance LED ', 'Standard or upgraded LED assemblies that deliver crisp, bright white illumination and long-lasting energy efficiency compared to older halogen bulbs.', 350000.00, 12);
+
 -- --------------------------------------------------------
 
 --
@@ -173,6 +189,14 @@ CREATE TABLE `users` (
   `role` varchar(255) NOT NULL DEFAULT 'client',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `role`, `created_at`) VALUES
+(1, 'Areen Anshula', 'areenanshula2003@gmail.com', '0725604894', '$2y$10$NbRwoCaGu4w4u4idHDtu0ulUy7sDemrtDZX1/swivWcjDB3M95swS', 'client', '2026-11-03 19:12:46'),
+(2, 'John Doe', 'johndoe@gmail.com', '0776542321', 'johndoe123', 'mechanic', '2026-11-04 17:43:29');
 
 --
 -- Indexes for dumped tables
@@ -275,7 +299,7 @@ ALTER TABLE `contact_messages`
 -- AUTO_INCREMENT for table `job_cards`
 --
 ALTER TABLE `job_cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `services`
@@ -293,13 +317,13 @@ ALTER TABLE `service_images`
 -- AUTO_INCREMENT for table `spare_parts`
 --
 ALTER TABLE `spare_parts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
