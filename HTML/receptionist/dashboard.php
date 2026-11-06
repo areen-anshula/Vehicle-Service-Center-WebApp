@@ -23,7 +23,12 @@ $flashMessage = '';
 $flashType = 'success';
 $reopenModal = false;
 
-
+// Reopen Today's Appointments Modal after an action
+$reopenTodayAppointmentsModal = (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_POST['return_to']) &&
+    $_POST['return_to'] === 'today_appointments'
+);
 /* Approve, reject, or assign a mechanic to a pending appointment. */
 
 if (
@@ -285,7 +290,9 @@ $acceptedSql = "
     ORDER BY a.date ASC, a.time ASC
 ";
 $acceptedResult = $conn->query($acceptedSql);
-while ($row = $acceptedResult->fetch_assoc()) { $acceptedRecords[] = $row; }
+while ($row = $acceptedResult->fetch_assoc()) {
+    $acceptedRecords[] = $row;
+}
 $acceptedResult->free();
 
 /* Load rejected appointment records for the modal. */
@@ -307,7 +314,9 @@ $rejectedSql = "
     ORDER BY a.date DESC
 ";
 $rejectedResult2 = $conn->query($rejectedSql);
-while ($row = $rejectedResult2->fetch_assoc()) { $rejectedRecords[] = $row; }
+while ($row = $rejectedResult2->fetch_assoc()) {
+    $rejectedRecords[] = $row;
+}
 $rejectedResult2->free();
 
 /* Load assigned job card records for the modal. */
@@ -328,7 +337,10 @@ $assignedSql = "
 ";
 $assignedResult = $conn->query($assignedSql);
 $assignedCount = 0;
-while ($row = $assignedResult->fetch_assoc()) { $assignedRecords[] = $row; $assignedCount++; }
+while ($row = $assignedResult->fetch_assoc()) {
+    $assignedRecords[] = $row;
+    $assignedCount++;
+}
 $assignedResult->free();
 
 /* Load in-progress job card records for the modal. */
@@ -349,7 +361,10 @@ $inProgressSql = "
 ";
 $inProgressResult = $conn->query($inProgressSql);
 $inProgressCount = 0;
-while ($row = $inProgressResult->fetch_assoc()) { $inProgressRecords[] = $row; $inProgressCount++; }
+while ($row = $inProgressResult->fetch_assoc()) {
+    $inProgressRecords[] = $row;
+    $inProgressCount++;
+}
 $inProgressResult->free();
 
 /* Load completed job card records for the modal. */
@@ -370,8 +385,71 @@ $closedSql = "
 ";
 $closedResult = $conn->query($closedSql);
 $closedCount = 0;
-while ($row = $closedResult->fetch_assoc()) { $closedRecords[] = $row; $closedCount++; }
+while ($row = $closedResult->fetch_assoc()) {
+    $closedRecords[] = $row;
+    $closedCount++;
+}
 $closedResult->free();
+
+
+// ==========================================
+// TODAY'S PENDING APPOINTMENTS
+// ==========================================
+
+$todayPendingAppointments = [];
+$todayAppointmentsCount = 0;
+
+try {
+    $todayAppointmentsQuery = "
+        SELECT
+            a.id,
+            a.user_id,
+            u.full_name AS customer_name,
+            u.phone AS customer_phone,
+            u.email AS customer_email,
+            a.vehicle_registration_number AS vehicle_number,
+            CONCAT_WS(' ', a.brand, a.model, a.manufacture_year) AS vehicle_name,
+            a.date AS appointment_date,
+            a.time AS appointment_time,
+            a.additional_note,
+            a.status,
+            GROUP_CONCAT(s.service_name SEPARATOR ', ') AS services
+        FROM appointment a
+        INNER JOIN users u ON a.user_id = u.id
+        LEFT JOIN appointment_services aps ON a.id = aps.appointment_id
+        LEFT JOIN services s ON aps.service_id = s.id
+        WHERE DATE(a.date) = CURDATE()
+          AND LOWER(TRIM(a.status)) = 'pending'
+        GROUP BY
+            a.id,
+            a.user_id,
+            u.full_name,
+            u.phone,
+            u.email,
+            a.vehicle_registration_number,
+            a.brand,
+            a.model,
+            a.manufacture_year,
+            a.date,
+            a.time,
+            a.additional_note,
+            a.status
+        ORDER BY a.time ASC
+    ";
+
+    $todayAppointmentsResult = $conn->query($todayAppointmentsQuery);
+
+    while ($row = $todayAppointmentsResult->fetch_assoc()) {
+        $todayPendingAppointments[] = $row;
+    }
+
+    $todayAppointmentsCount = count($todayPendingAppointments);
+
+} catch (mysqli_sql_exception $e) {
+    $todayPendingAppointments = [];
+    $todayAppointmentsCount = 0;
+    error_log("Today's appointments error: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -685,8 +763,8 @@ $closedResult->free();
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 mt-5">
 
                         <!-- Today's Appointments - Full Width -->
-                        <div
-                            class="group relative overflow-hidden rounded-2xl border border-orange-100 bg-gradient-to-br from-white to-orange-50/70 p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-100/60 sm:col-span-2 xl:col-span-4">
+                        <div class="group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border border-orange-100 bg-gradient-to-br from-white to-orange-50/70 p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-100/60 sm:col-span-2 xl:col-span-4"
+                            onclick="openTodayAppointmentsModal()">
 
                             <div class="relative z-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
 
@@ -704,7 +782,7 @@ $closedResult->free();
 
                                         <div class="mt-1 flex items-baseline gap-2">
                                             <h3 class="text-4xl font-bold tracking-tight text-gray-900">
-                                                12
+                                                <?php echo $todayAppointmentsCount; ?>
                                             </h3>
                                             <span class="text-xs font-medium text-green-600">
                                                 Scheduled today
@@ -1024,7 +1102,8 @@ $closedResult->free();
         role="dialog" aria-modal="true" aria-labelledby="jobCardModalTitle">
 
         <!-- Modal inner container -->
-        <div class="relative flex max-h-[90vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
 
             <!-- Modal Header -->
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
@@ -1033,8 +1112,10 @@ $closedResult->free();
                         <i class="fa-solid fa-clock text-lg text-orange-500"></i>
                     </div>
                     <div>
-                        <h2 id="jobCardModalTitle" class="text-base font-bold text-gray-900">Pending Appointment Requests</h2>
-                        <p class="mt-0.5 text-xs text-gray-500"><?= $pendingCount ?> request<?= $pendingCount !== 1 ? 's' : '' ?> awaiting review</p>
+                        <h2 id="jobCardModalTitle" class="text-base font-bold text-gray-900">Pending Appointment
+                            Requests</h2>
+                        <p class="mt-0.5 text-xs text-gray-500"><?= $pendingCount ?>
+                            request<?= $pendingCount !== 1 ? 's' : '' ?> awaiting review</p>
                     </div>
                 </div>
                 <button type="button" data-close-job-modal
@@ -1046,15 +1127,16 @@ $closedResult->free();
 
             <!-- Flash message (shown only after a POST action) -->
             <?php if (!empty($flashMessage)): ?>
-            <div class="shrink-0 px-6 pt-4">
-                <div class="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium
+                <div class="shrink-0 px-6 pt-4">
+                    <div class="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium
                     <?= $flashType === 'success'
                         ? 'bg-green-50 text-green-700 border border-green-200'
                         : 'bg-red-50 text-red-700 border border-red-200' ?>">
-                    <i class="fa-solid <?= $flashType === 'success' ? 'fa-circle-check' : 'fa-circle-xmark' ?> text-base"></i>
-                    <span><?= htmlspecialchars($flashMessage) ?></span>
+                        <i
+                            class="fa-solid <?= $flashType === 'success' ? 'fa-circle-check' : 'fa-circle-xmark' ?> text-base"></i>
+                        <span><?= htmlspecialchars($flashMessage) ?></span>
+                    </div>
                 </div>
-            </div>
             <?php endif; ?>
 
             <!-- Scrollable table body -->
@@ -1086,12 +1168,16 @@ $closedResult->free();
 
                                         <!-- Customer Details -->
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($appointment['full_name']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500">
-                                                <i class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($appointment['phone']) ?>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($appointment['full_name']) ?>
                                             </p>
                                             <p class="mt-1 text-xs text-gray-500">
-                                                <i class="fa-solid fa-envelope mr-1"></i><?= htmlspecialchars($appointment['email']) ?>
+                                                <i
+                                                    class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($appointment['phone']) ?>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500">
+                                                <i
+                                                    class="fa-solid fa-envelope mr-1"></i><?= htmlspecialchars($appointment['email']) ?>
                                             </p>
                                         </td>
 
@@ -1099,10 +1185,12 @@ $closedResult->free();
                                         <td class="px-4 py-4">
                                             <p class="text-xs font-semibold text-gray-900">
                                                 <?= htmlspecialchars($appointment['brand'] . ' ' . $appointment['model']) ?>
-                                                <span class="font-normal text-gray-500">(<?= htmlspecialchars($appointment['manufacture_year']) ?>)</span>
+                                                <span
+                                                    class="font-normal text-gray-500">(<?= htmlspecialchars($appointment['manufacture_year']) ?>)</span>
                                             </p>
                                             <p class="mt-1 text-xs text-gray-500">
-                                                <i class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($appointment['vehicle_registration_number']) ?>
+                                                <i
+                                                    class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($appointment['vehicle_registration_number']) ?>
                                             </p>
                                         </td>
 
@@ -1116,29 +1204,32 @@ $closedResult->free();
                                         <!-- Appointment -->
                                         <td class="px-4 py-4">
                                             <p class="text-xs font-semibold text-gray-800">
-                                                <i class="fa-regular fa-calendar mr-1 text-[#E89000]"></i><?= htmlspecialchars($appointment['date']) ?>
+                                                <i
+                                                    class="fa-regular fa-calendar mr-1 text-[#E89000]"></i><?= htmlspecialchars($appointment['date']) ?>
                                             </p>
                                             <p class="mt-1 text-xs text-gray-500">
-                                                <i class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($appointment['time']) ?>
+                                                <i
+                                                    class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($appointment['time']) ?>
                                             </p>
                                             <?php if (!empty($appointment['additional_note'])): ?>
-                                            <p class="mt-1 text-xs text-gray-400 italic max-w-[140px] whitespace-normal">
-                                                <?= htmlspecialchars($appointment['additional_note']) ?>
-                                            </p>
+                                                <p class="mt-1 text-xs text-gray-400 italic max-w-[140px] whitespace-normal">
+                                                    <?= htmlspecialchars($appointment['additional_note']) ?>
+                                                </p>
                                             <?php endif; ?>
                                         </td>
 
                                         <!-- Assign Mechanic + Actions (single unified form) -->
                                         <td class="px-4 py-4">
-                                            <form method="POST" action="dashboard.php" class="flex min-w-[240px] flex-col gap-2">
-                                                <input type="hidden" name="appointment_id" value="<?= htmlspecialchars($appointment['id']) ?>">
-                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                                            <form method="POST" action="dashboard.php"
+                                                class="flex min-w-[240px] flex-col gap-2">
+                                                <input type="hidden" name="appointment_id"
+                                                    value="<?= htmlspecialchars($appointment['id']) ?>">
+                                                <input type="hidden" name="csrf_token"
+                                                    value="<?= htmlspecialchars($csrfToken) ?>">
 
                                                 <!-- Mechanic dropdown (value picked up by Approve) -->
-                                                <select
-                                                    name="mechanic_id"
-                                                    class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100"
-                                                >
+                                                <select name="mechanic_id"
+                                                    class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
                                                     <option value="">Choose Mechanic</option>
                                                     <?php foreach ($mechanics as $mechanic): ?>
                                                         <option value="<?= htmlspecialchars($mechanic['id']) ?>">
@@ -1149,24 +1240,16 @@ $closedResult->free();
 
                                                 <!-- Approve + Reject side by side -->
                                                 <div class="flex gap-2">
-                                                    <button
-                                                        type="submit"
-                                                        name="action"
-                                                        value="assign_mechanic"
+                                                    <button type="submit" name="action" value="assign_mechanic"
                                                         <?= empty($mechanics) ? 'disabled' : '' ?>
                                                         onclick="return confirm('Assign the selected mechanic and approve this appointment?');"
-                                                        class="flex-1 cursor-pointer rounded-lg bg-green-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-green-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-                                                    >
+                                                        class="flex-1 cursor-pointer rounded-lg bg-green-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-green-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50">
                                                         <i class="fa-solid fa-check mr-1"></i>Approve
                                                     </button>
 
-                                                    <button
-                                                        type="submit"
-                                                        name="action"
-                                                        value="reject_appointment"
+                                                    <button type="submit" name="action" value="reject_appointment"
                                                         onclick="return confirm('Are you sure you want to reject this appointment?');"
-                                                        class="flex-1 cursor-pointer rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-red-700 active:scale-95"
-                                                    >
+                                                        class="flex-1 cursor-pointer rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-red-700 active:scale-95">
                                                         <i class="fa-solid fa-xmark mr-1"></i>Reject
                                                     </button>
                                                 </div>
@@ -1195,7 +1278,8 @@ $closedResult->free();
     <div id="pendingModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
         role="dialog" aria-modal="true">
-        <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50">
@@ -1203,7 +1287,8 @@ $closedResult->free();
                     </div>
                     <div>
                         <h2 class="text-base font-bold text-gray-900">Pending Appointment Records</h2>
-                        <p class="mt-0.5 text-xs text-gray-500"><?= $pendingCount ?> record<?= $pendingCount !== 1 ? 's' : '' ?> found</p>
+                        <p class="mt-0.5 text-xs text-gray-500"><?= $pendingCount ?>
+                            record<?= $pendingCount !== 1 ? 's' : '' ?> found</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeStatusModal('pendingModal')"
@@ -1229,29 +1314,50 @@ $closedResult->free();
                             <?php if (!empty($pendingRequests)): ?>
                                 <?php foreach ($pendingRequests as $r): ?>
                                     <tr class="transition hover:bg-gray-50">
-                                        <td class="px-4 py-4"><span class="rounded-lg bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-600">APT-<?= htmlspecialchars($r['id']) ?></span></td>
-                                        <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['full_name']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['phone']) ?></p>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-lg bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-600">APT-<?= htmlspecialchars($r['id']) ?></span>
                                         </td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['full_name']) ?>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['phone']) ?></p>
                                         </td>
-                                        <td class="px-4 py-4"><p class="max-w-[180px] whitespace-normal text-xs text-gray-700"><?= htmlspecialchars($r['requested_services'] ?? 'N/A') ?></p></td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-800"><i class="fa-regular fa-calendar mr-1 text-orange-500"></i><?= htmlspecialchars($r['date']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span
+                                                    class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?>
+                                            </p>
                                         </td>
-                                        <td class="px-4 py-4"><span class="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-600">Pending</span></td>
+                                        <td class="px-4 py-4">
+                                            <p class="max-w-[180px] whitespace-normal text-xs text-gray-700">
+                                                <?= htmlspecialchars($r['requested_services'] ?? 'N/A') ?>
+                                            </p>
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            <p class="text-xs font-semibold text-gray-800"><i
+                                                    class="fa-regular fa-calendar mr-1 text-orange-500"></i><?= htmlspecialchars($r['date']) ?>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                        </td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-600">Pending</span>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="6" class="px-5 py-16 text-center">
-                                    <i class="fa-regular fa-calendar-check mb-3 block text-4xl text-gray-300"></i>
-                                    <p class="text-xs font-semibold text-gray-700">No Pending Records</p>
-                                    <p class="mt-1 text-xs text-gray-500">No pending appointments found.</p>
-                                </td></tr>
+                                <tr>
+                                    <td colspan="6" class="px-5 py-16 text-center">
+                                        <i class="fa-regular fa-calendar-check mb-3 block text-4xl text-gray-300"></i>
+                                        <p class="text-xs font-semibold text-gray-700">No Pending Records</p>
+                                        <p class="mt-1 text-xs text-gray-500">No pending appointments found.</p>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -1264,7 +1370,8 @@ $closedResult->free();
     <div id="acceptedModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
         role="dialog" aria-modal="true">
-        <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
@@ -1272,7 +1379,8 @@ $closedResult->free();
                     </div>
                     <div>
                         <h2 class="text-base font-bold text-gray-900">Accepted Appointment Records</h2>
-                        <p class="mt-0.5 text-xs text-gray-500"><?= $approvedCount ?> record<?= $approvedCount !== 1 ? 's' : '' ?> found</p>
+                        <p class="mt-0.5 text-xs text-gray-500"><?= $approvedCount ?>
+                            record<?= $approvedCount !== 1 ? 's' : '' ?> found</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeStatusModal('acceptedModal')"
@@ -1298,29 +1406,50 @@ $closedResult->free();
                             <?php if (!empty($acceptedRecords)): ?>
                                 <?php foreach ($acceptedRecords as $r): ?>
                                     <tr class="transition hover:bg-gray-50">
-                                        <td class="px-4 py-4"><span class="rounded-lg bg-green-50 px-3 py-1.5 text-xs font-bold text-green-600">APT-<?= htmlspecialchars($r['id']) ?></span></td>
-                                        <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['full_name']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['phone']) ?></p>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-lg bg-green-50 px-3 py-1.5 text-xs font-bold text-green-600">APT-<?= htmlspecialchars($r['id']) ?></span>
                                         </td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['full_name']) ?>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['phone']) ?></p>
                                         </td>
-                                        <td class="px-4 py-4"><p class="max-w-[180px] whitespace-normal text-xs text-gray-700"><?= htmlspecialchars($r['requested_services'] ?? 'N/A') ?></p></td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-800"><i class="fa-regular fa-calendar mr-1 text-green-500"></i><?= htmlspecialchars($r['date']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span
+                                                    class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?>
+                                            </p>
                                         </td>
-                                        <td class="px-4 py-4"><span class="rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-600"><?= ucfirst(htmlspecialchars($r['status'])) ?></span></td>
+                                        <td class="px-4 py-4">
+                                            <p class="max-w-[180px] whitespace-normal text-xs text-gray-700">
+                                                <?= htmlspecialchars($r['requested_services'] ?? 'N/A') ?>
+                                            </p>
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            <p class="text-xs font-semibold text-gray-800"><i
+                                                    class="fa-regular fa-calendar mr-1 text-green-500"></i><?= htmlspecialchars($r['date']) ?>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                        </td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-600"><?= ucfirst(htmlspecialchars($r['status'])) ?></span>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="6" class="px-5 py-16 text-center">
-                                    <i class="fa-regular fa-calendar-check mb-3 block text-4xl text-gray-300"></i>
-                                    <p class="text-xs font-semibold text-gray-700">No Accepted Records</p>
-                                    <p class="mt-1 text-xs text-gray-500">No accepted appointments found.</p>
-                                </td></tr>
+                                <tr>
+                                    <td colspan="6" class="px-5 py-16 text-center">
+                                        <i class="fa-regular fa-calendar-check mb-3 block text-4xl text-gray-300"></i>
+                                        <p class="text-xs font-semibold text-gray-700">No Accepted Records</p>
+                                        <p class="mt-1 text-xs text-gray-500">No accepted appointments found.</p>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -1333,7 +1462,8 @@ $closedResult->free();
     <div id="rejectedModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
         role="dialog" aria-modal="true">
-        <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-50">
@@ -1341,7 +1471,8 @@ $closedResult->free();
                     </div>
                     <div>
                         <h2 class="text-base font-bold text-gray-900">Rejected Appointment Records</h2>
-                        <p class="mt-0.5 text-xs text-gray-500"><?= $rejectedCount ?> record<?= $rejectedCount !== 1 ? 's' : '' ?> found</p>
+                        <p class="mt-0.5 text-xs text-gray-500"><?= $rejectedCount ?>
+                            record<?= $rejectedCount !== 1 ? 's' : '' ?> found</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeStatusModal('rejectedModal')"
@@ -1367,29 +1498,50 @@ $closedResult->free();
                             <?php if (!empty($rejectedRecords)): ?>
                                 <?php foreach ($rejectedRecords as $r): ?>
                                     <tr class="transition hover:bg-gray-50">
-                                        <td class="px-4 py-4"><span class="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600">APT-<?= htmlspecialchars($r['id']) ?></span></td>
-                                        <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['full_name']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['phone']) ?></p>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600">APT-<?= htmlspecialchars($r['id']) ?></span>
                                         </td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['full_name']) ?>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['phone']) ?></p>
                                         </td>
-                                        <td class="px-4 py-4"><p class="max-w-[180px] whitespace-normal text-xs text-gray-700"><?= htmlspecialchars($r['requested_services'] ?? 'N/A') ?></p></td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-800"><i class="fa-regular fa-calendar mr-1 text-red-500"></i><?= htmlspecialchars($r['date']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span
+                                                    class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?>
+                                            </p>
                                         </td>
-                                        <td class="px-4 py-4"><span class="rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600">Rejected</span></td>
+                                        <td class="px-4 py-4">
+                                            <p class="max-w-[180px] whitespace-normal text-xs text-gray-700">
+                                                <?= htmlspecialchars($r['requested_services'] ?? 'N/A') ?>
+                                            </p>
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            <p class="text-xs font-semibold text-gray-800"><i
+                                                    class="fa-regular fa-calendar mr-1 text-red-500"></i><?= htmlspecialchars($r['date']) ?>
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500"><i
+                                                    class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                        </td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600">Rejected</span>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="6" class="px-5 py-16 text-center">
-                                    <i class="fa-regular fa-calendar-check mb-3 block text-4xl text-gray-300"></i>
-                                    <p class="text-xs font-semibold text-gray-700">No Rejected Records</p>
-                                    <p class="mt-1 text-xs text-gray-500">No rejected appointments found.</p>
-                                </td></tr>
+                                <tr>
+                                    <td colspan="6" class="px-5 py-16 text-center">
+                                        <i class="fa-regular fa-calendar-check mb-3 block text-4xl text-gray-300"></i>
+                                        <p class="text-xs font-semibold text-gray-700">No Rejected Records</p>
+                                        <p class="mt-1 text-xs text-gray-500">No rejected appointments found.</p>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -1402,7 +1554,8 @@ $closedResult->free();
     <div id="assignedModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
         role="dialog" aria-modal="true">
-        <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
@@ -1410,7 +1563,8 @@ $closedResult->free();
                     </div>
                     <div>
                         <h2 class="text-base font-bold text-gray-900">Assigned Job Records</h2>
-                        <p class="mt-0.5 text-xs text-gray-500"><?= $assignedCount ?> record<?= $assignedCount !== 1 ? 's' : '' ?> found</p>
+                        <p class="mt-0.5 text-xs text-gray-500"><?= $assignedCount ?>
+                            record<?= $assignedCount !== 1 ? 's' : '' ?> found</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeStatusModal('assignedModal')"
@@ -1437,40 +1591,64 @@ $closedResult->free();
                             <?php if (!empty($assignedRecords)): ?>
                                 <?php foreach ($assignedRecords as $r): ?>
                                     <tr class="transition hover:bg-gray-50">
-                                        <td class="px-4 py-4"><span class="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-600">JC-<?= htmlspecialchars($r['job_card_id']) ?></span></td>
-                                        <td class="px-4 py-4"><span class="text-xs font-medium text-gray-700"><?= $r['appointment_id'] ? 'APT-' . htmlspecialchars($r['appointment_id']) : 'N/A' ?></span></td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-600">JC-<?= htmlspecialchars($r['job_card_id']) ?></span>
+                                        </td>
+                                        <td class="px-4 py-4"><span
+                                                class="text-xs font-medium text-gray-700"><?= $r['appointment_id'] ? 'APT-' . htmlspecialchars($r['appointment_id']) : 'N/A' ?></span>
+                                        </td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['customer_name'] ?? 'N/A') ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['customer_name'] ?? 'N/A') ?>
+                                            </p>
                                             <?php if (!empty($r['customer_phone'])): ?>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['customer_phone']) ?></p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['customer_phone']) ?>
+                                                </p>
                                             <?php endif; ?>
                                         </td>
                                         <td class="px-4 py-4">
                                             <?php if (!empty($r['brand'])): ?>
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?></p>
+                                                <p class="text-xs font-semibold text-gray-900">
+                                                    <?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span
+                                                        class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span>
+                                                </p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?>
+                                                </p>
                                             <?php else: ?>
-                                            <p class="text-xs text-gray-500">N/A</p>
+                                                <p class="text-xs text-gray-500">N/A</p>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="px-4 py-4"><p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['mechanic_name'] ?? 'N/A') ?></p></td>
+                                        <td class="px-4 py-4">
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['mechanic_name'] ?? 'N/A') ?>
+                                            </p>
+                                        </td>
                                         <td class="px-4 py-4">
                                             <?php if (!empty($r['date'])): ?>
-                                            <p class="text-xs font-semibold text-gray-800"><i class="fa-regular fa-calendar mr-1 text-blue-500"></i><?= htmlspecialchars($r['date']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                                <p class="text-xs font-semibold text-gray-800"><i
+                                                        class="fa-regular fa-calendar mr-1 text-blue-500"></i><?= htmlspecialchars($r['date']) ?>
+                                                </p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
                                             <?php else: ?>
-                                            <p class="text-xs text-gray-500">N/A</p>
+                                                <p class="text-xs text-gray-500">N/A</p>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="px-4 py-4"><span class="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600">Assigned</span></td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600">Assigned</span>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="7" class="px-5 py-16 text-center">
-                                    <i class="fa-solid fa-clipboard-list mb-3 block text-4xl text-gray-300"></i>
-                                    <p class="text-xs font-semibold text-gray-700">No Assigned Jobs</p>
-                                    <p class="mt-1 text-xs text-gray-500">No assigned job cards found.</p>
-                                </td></tr>
+                                <tr>
+                                    <td colspan="7" class="px-5 py-16 text-center">
+                                        <i class="fa-solid fa-clipboard-list mb-3 block text-4xl text-gray-300"></i>
+                                        <p class="text-xs font-semibold text-gray-700">No Assigned Jobs</p>
+                                        <p class="mt-1 text-xs text-gray-500">No assigned job cards found.</p>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -1483,7 +1661,8 @@ $closedResult->free();
     <div id="inProgressModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
         role="dialog" aria-modal="true">
-        <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
@@ -1491,7 +1670,8 @@ $closedResult->free();
                     </div>
                     <div>
                         <h2 class="text-base font-bold text-gray-900">In Progress Job Records</h2>
-                        <p class="mt-0.5 text-xs text-gray-500"><?= $inProgressCount ?> record<?= $inProgressCount !== 1 ? 's' : '' ?> found</p>
+                        <p class="mt-0.5 text-xs text-gray-500"><?= $inProgressCount ?>
+                            record<?= $inProgressCount !== 1 ? 's' : '' ?> found</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeStatusModal('inProgressModal')"
@@ -1518,40 +1698,64 @@ $closedResult->free();
                             <?php if (!empty($inProgressRecords)): ?>
                                 <?php foreach ($inProgressRecords as $r): ?>
                                     <tr class="transition hover:bg-gray-50">
-                                        <td class="px-4 py-4"><span class="rounded-lg bg-purple-50 px-3 py-1.5 text-xs font-bold text-purple-600">JC-<?= htmlspecialchars($r['job_card_id']) ?></span></td>
-                                        <td class="px-4 py-4"><span class="text-xs font-medium text-gray-700"><?= $r['appointment_id'] ? 'APT-' . htmlspecialchars($r['appointment_id']) : 'N/A' ?></span></td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-lg bg-purple-50 px-3 py-1.5 text-xs font-bold text-purple-600">JC-<?= htmlspecialchars($r['job_card_id']) ?></span>
+                                        </td>
+                                        <td class="px-4 py-4"><span
+                                                class="text-xs font-medium text-gray-700"><?= $r['appointment_id'] ? 'APT-' . htmlspecialchars($r['appointment_id']) : 'N/A' ?></span>
+                                        </td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['customer_name'] ?? 'N/A') ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['customer_name'] ?? 'N/A') ?>
+                                            </p>
                                             <?php if (!empty($r['customer_phone'])): ?>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['customer_phone']) ?></p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['customer_phone']) ?>
+                                                </p>
                                             <?php endif; ?>
                                         </td>
                                         <td class="px-4 py-4">
                                             <?php if (!empty($r['brand'])): ?>
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?></p>
+                                                <p class="text-xs font-semibold text-gray-900">
+                                                    <?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span
+                                                        class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span>
+                                                </p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?>
+                                                </p>
                                             <?php else: ?>
-                                            <p class="text-xs text-gray-500">N/A</p>
+                                                <p class="text-xs text-gray-500">N/A</p>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="px-4 py-4"><p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['mechanic_name'] ?? 'N/A') ?></p></td>
+                                        <td class="px-4 py-4">
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['mechanic_name'] ?? 'N/A') ?>
+                                            </p>
+                                        </td>
                                         <td class="px-4 py-4">
                                             <?php if (!empty($r['date'])): ?>
-                                            <p class="text-xs font-semibold text-gray-800"><i class="fa-regular fa-calendar mr-1 text-purple-500"></i><?= htmlspecialchars($r['date']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                                <p class="text-xs font-semibold text-gray-800"><i
+                                                        class="fa-regular fa-calendar mr-1 text-purple-500"></i><?= htmlspecialchars($r['date']) ?>
+                                                </p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
                                             <?php else: ?>
-                                            <p class="text-xs text-gray-500">N/A</p>
+                                                <p class="text-xs text-gray-500">N/A</p>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="px-4 py-4"><span class="rounded-full bg-purple-50 px-2.5 py-1 text-xs font-medium text-purple-600">In Progress</span></td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-full bg-purple-50 px-2.5 py-1 text-xs font-medium text-purple-600">In
+                                                Progress</span></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="7" class="px-5 py-16 text-center">
-                                    <i class="fa-solid fa-gears mb-3 block text-4xl text-gray-300"></i>
-                                    <p class="text-xs font-semibold text-gray-700">No In-Progress Jobs</p>
-                                    <p class="mt-1 text-xs text-gray-500">No jobs currently in progress.</p>
-                                </td></tr>
+                                <tr>
+                                    <td colspan="7" class="px-5 py-16 text-center">
+                                        <i class="fa-solid fa-gears mb-3 block text-4xl text-gray-300"></i>
+                                        <p class="text-xs font-semibold text-gray-700">No In-Progress Jobs</p>
+                                        <p class="mt-1 text-xs text-gray-500">No jobs currently in progress.</p>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -1564,7 +1768,8 @@ $closedResult->free();
     <div id="closedModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
         role="dialog" aria-modal="true">
-        <div class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
@@ -1572,7 +1777,8 @@ $closedResult->free();
                     </div>
                     <div>
                         <h2 class="text-base font-bold text-gray-900">Closed Job Records</h2>
-                        <p class="mt-0.5 text-xs text-gray-500"><?= $closedCount ?> record<?= $closedCount !== 1 ? 's' : '' ?> found</p>
+                        <p class="mt-0.5 text-xs text-gray-500"><?= $closedCount ?>
+                            record<?= $closedCount !== 1 ? 's' : '' ?> found</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeStatusModal('closedModal')"
@@ -1599,40 +1805,64 @@ $closedResult->free();
                             <?php if (!empty($closedRecords)): ?>
                                 <?php foreach ($closedRecords as $r): ?>
                                     <tr class="transition hover:bg-gray-50">
-                                        <td class="px-4 py-4"><span class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-600">JC-<?= htmlspecialchars($r['job_card_id']) ?></span></td>
-                                        <td class="px-4 py-4"><span class="text-xs font-medium text-gray-700"><?= $r['appointment_id'] ? 'APT-' . htmlspecialchars($r['appointment_id']) : 'N/A' ?></span></td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-600">JC-<?= htmlspecialchars($r['job_card_id']) ?></span>
+                                        </td>
+                                        <td class="px-4 py-4"><span
+                                                class="text-xs font-medium text-gray-700"><?= $r['appointment_id'] ? 'APT-' . htmlspecialchars($r['appointment_id']) : 'N/A' ?></span>
+                                        </td>
                                         <td class="px-4 py-4">
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['customer_name'] ?? 'N/A') ?></p>
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['customer_name'] ?? 'N/A') ?>
+                                            </p>
                                             <?php if (!empty($r['customer_phone'])): ?>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['customer_phone']) ?></p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-solid fa-phone mr-1"></i><?= htmlspecialchars($r['customer_phone']) ?>
+                                                </p>
                                             <?php endif; ?>
                                         </td>
                                         <td class="px-4 py-4">
                                             <?php if (!empty($r['brand'])): ?>
-                                            <p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?></p>
+                                                <p class="text-xs font-semibold text-gray-900">
+                                                    <?= htmlspecialchars($r['brand'] . ' ' . $r['model']) ?> <span
+                                                        class="font-normal text-gray-500">(<?= htmlspecialchars($r['manufacture_year']) ?>)</span>
+                                                </p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-solid fa-hashtag mr-1"></i><?= htmlspecialchars($r['vehicle_registration_number']) ?>
+                                                </p>
                                             <?php else: ?>
-                                            <p class="text-xs text-gray-500">N/A</p>
+                                                <p class="text-xs text-gray-500">N/A</p>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="px-4 py-4"><p class="text-xs font-semibold text-gray-900"><?= htmlspecialchars($r['mechanic_name'] ?? 'N/A') ?></p></td>
+                                        <td class="px-4 py-4">
+                                            <p class="text-xs font-semibold text-gray-900">
+                                                <?= htmlspecialchars($r['mechanic_name'] ?? 'N/A') ?>
+                                            </p>
+                                        </td>
                                         <td class="px-4 py-4">
                                             <?php if (!empty($r['date'])): ?>
-                                            <p class="text-xs font-semibold text-gray-800"><i class="fa-regular fa-calendar mr-1 text-gray-500"></i><?= htmlspecialchars($r['date']) ?></p>
-                                            <p class="mt-1 text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
+                                                <p class="text-xs font-semibold text-gray-800"><i
+                                                        class="fa-regular fa-calendar mr-1 text-gray-500"></i><?= htmlspecialchars($r['date']) ?>
+                                                </p>
+                                                <p class="mt-1 text-xs text-gray-500"><i
+                                                        class="fa-regular fa-clock mr-1"></i><?= htmlspecialchars($r['time']) ?></p>
                                             <?php else: ?>
-                                            <p class="text-xs text-gray-500">N/A</p>
+                                                <p class="text-xs text-gray-500">N/A</p>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="px-4 py-4"><span class="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">Completed</span></td>
+                                        <td class="px-4 py-4"><span
+                                                class="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">Completed</span>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan="7" class="px-5 py-16 text-center">
-                                    <i class="fa-solid fa-circle-check mb-3 block text-4xl text-gray-300"></i>
-                                    <p class="text-xs font-semibold text-gray-700">No Closed Jobs</p>
-                                    <p class="mt-1 text-xs text-gray-500">No completed jobs found.</p>
-                                </td></tr>
+                                <tr>
+                                    <td colspan="7" class="px-5 py-16 text-center">
+                                        <i class="fa-solid fa-circle-check mb-3 block text-4xl text-gray-300"></i>
+                                        <p class="text-xs font-semibold text-gray-700">No Closed Jobs</p>
+                                        <p class="mt-1 text-xs text-gray-500">No completed jobs found.</p>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -1645,7 +1875,8 @@ $closedResult->free();
     <div id="invoicesModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
         role="dialog" aria-modal="true">
-        <div class="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-50">
@@ -1665,7 +1896,8 @@ $closedResult->free();
             <div class="px-6 py-16 text-center">
                 <i class="fa-solid fa-file-invoice-dollar mb-3 block text-4xl text-gray-300"></i>
                 <p class="text-xs font-semibold text-gray-700">No Invoice Data Available</p>
-                <p class="mt-1 text-xs text-gray-500">Invoice records will appear here once the invoices module is set up.</p>
+                <p class="mt-1 text-xs text-gray-500">Invoice records will appear here once the invoices module is set
+                    up.</p>
             </div>
         </div>
     </div>
@@ -1674,7 +1906,8 @@ $closedResult->free();
     <div id="paymentsModal"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-950/60 p-3 backdrop-blur-sm sm:p-6"
         role="dialog" aria-modal="true">
-        <div class="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div
+            class="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div class="flex shrink-0 items-center justify-between border-b border-gray-100 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50">
@@ -1694,9 +1927,233 @@ $closedResult->free();
             <div class="px-6 py-16 text-center">
                 <i class="fa-solid fa-money-bill-wave mb-3 block text-4xl text-gray-300"></i>
                 <p class="text-xs font-semibold text-gray-700">No Payment Data Available</p>
-                <p class="mt-1 text-xs text-gray-500">Payment records will appear here once the payments module is set up.</p>
+                <p class="mt-1 text-xs text-gray-500">Payment records will appear here once the payments module is set
+                    up.</p>
             </div>
         </div>
+    </div>
+
+    <!-- TODAY'S APPOINTMENTS MODAL -->
+    <div id="todayAppointmentsModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4">
+
+        <div class="max-h-[90vh] w-full max-w-7xl overflow-hidden rounded-xl bg-white shadow-2xl">
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between border-b border-gray-200 p-5">
+
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">
+                        Today's Appointments
+                    </h2>
+
+                    <p class="mt-1 text-xs text-gray-500">
+                        View and manage today's pending appointment requests
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3">
+
+                    <span class="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-600">
+                        <?php echo $todayAppointmentsCount; ?> Pending
+                    </span>
+
+                    <button type="button" onclick="closeTodayAppointmentsModal()"
+                        class="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Modal Content -->
+            <div class="max-h-[calc(90vh-90px)] overflow-auto p-5">
+
+                <?php if (!empty($todayPendingAppointments)): ?>
+
+                    <div class="overflow-x-auto rounded-lg border border-gray-200">
+
+                        <table class="w-full min-w-[1100px] text-left text-xs">
+
+                            <thead class="bg-gray-50 text-gray-600">
+
+                                <tr>
+                                    <th class="px-4 py-3 font-semibold">Request</th>
+                                    <th class="px-4 py-3 font-semibold">Customer Details</th>
+                                    <th class="px-4 py-3 font-semibold">Vehicle Details</th>
+                                    <th class="px-4 py-3 font-semibold">Requested Services</th>
+                                    <th class="px-4 py-3 font-semibold">Appointment Time</th>
+                                    <th class="px-4 py-3 text-center font-semibold">Actions</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-100">
+
+                                <?php foreach ($todayPendingAppointments as $appointment): ?>
+
+                                    <tr class="transition hover:bg-gray-50">
+
+                                        <!-- Request ID -->
+                                        <td class="px-4 py-4">
+                                            <span class="font-bold text-gray-900">
+                                                #
+                                                <?php echo (int) $appointment['id']; ?>
+                                            </span>
+
+                                            <p class="mt-1 text-[10px] text-orange-600">
+                                                Pending
+                                            </p>
+                                        </td>
+
+                                        <!-- Customer Details -->
+                                        <td class="px-4 py-4">
+
+                                            <p class="font-semibold text-gray-900">
+                                                <?php echo htmlspecialchars($appointment['customer_name'] ?? ''); ?>
+                                            </p>
+
+                                            <p class="mt-1 text-gray-500">
+                                                <?php echo htmlspecialchars($appointment['customer_phone'] ?? ''); ?>
+                                            </p>
+
+                                            <p class="mt-1 text-gray-500">
+                                                <?php echo htmlspecialchars($appointment['customer_email'] ?? ''); ?>
+                                            </p>
+
+                                        </td>
+
+                                        <!-- Vehicle Details -->
+                                        <td class="px-4 py-4">
+
+                                            <p class="font-semibold text-gray-900">
+                                                <?php echo htmlspecialchars($appointment['vehicle_name'] ?? ''); ?>
+                                            </p>
+
+                                            <p class="mt-1 text-gray-500">
+                                                <?php echo htmlspecialchars($appointment['vehicle_number'] ?? ''); ?>
+                                            </p>
+
+                                        </td>
+
+                                        <!-- Services -->
+                                        <td class="px-4 py-4">
+
+                                            <p class="max-w-[200px] whitespace-normal text-gray-700">
+                                                <?php echo htmlspecialchars($appointment['services'] ?? 'No services selected'); ?>
+                                            </p>
+
+                                        </td>
+
+                                        <!-- Appointment Time -->
+                                        <td class="px-4 py-4">
+
+                                            <p class="font-semibold text-gray-900">
+                                                <?php echo htmlspecialchars($appointment['appointment_time'] ?? ''); ?>
+                                            </p>
+
+                                            <p class="mt-1 text-gray-500">
+                                                <?php echo htmlspecialchars($appointment['appointment_date'] ?? ''); ?>
+                                            </p>
+
+                                        </td>
+
+                                        <!-- Accept / Reject Actions -->
+                                        <td class="px-4 py-4">
+
+                                            <div class="flex items-center justify-center gap-2">
+
+                                                <!-- Accept -->
+                                                <form method="POST" action="dashboard.php">
+
+                                                    <input type="hidden" name="action" value="approve_appointment">
+
+                                                    <input type="hidden" name="appointment_id"
+                                                        value="<?php echo (int) $appointment['id']; ?>">
+
+                                                    <input type="hidden" name="csrf_token"
+                                                        value="<?php echo htmlspecialchars($csrfToken); ?>">
+
+                                                    <input type="hidden" name="return_to" value="today_appointments">
+
+                                                    <button type="submit"
+                                                        onclick="return confirm('Are you sure you want to accept this appointment?')"
+                                                        class="rounded-lg bg-green-600 px-3 py-2 font-semibold text-white transition hover:bg-green-700">
+
+                                                        <i class="fa-solid fa-check mr-1"></i>
+                                                        Accept
+
+                                                    </button>
+
+                                                </form>
+
+                                                <!-- Reject -->
+                                                <form method="POST" action="dashboard.php">
+
+                                                    <input type="hidden" name="action" value="reject_appointment">
+
+                                                    <input type="hidden" name="appointment_id"
+                                                        value="<?php echo (int) $appointment['id']; ?>">
+
+                                                    <input type="hidden" name="csrf_token"
+                                                        value="<?php echo htmlspecialchars($csrfToken); ?>">
+
+                                                    <input type="hidden" name="return_to" value="today_appointments">
+
+                                                    <button type="submit"
+                                                        onclick="return confirm('Are you sure you want to reject this appointment?')"
+                                                        class="rounded-lg bg-red-600 px-3 py-2 font-semibold text-white transition hover:bg-red-700">
+
+                                                        <i class="fa-solid fa-xmark mr-1"></i>
+                                                        Reject
+
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                <?php endforeach; ?>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <?php else: ?>
+
+                    <!-- Empty State -->
+                    <div class="flex flex-col items-center justify-center py-14 text-center">
+
+                        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
+
+                            <i class="fa-solid fa-calendar-check text-2xl text-orange-500"></i>
+
+                        </div>
+
+                        <h3 class="text-sm font-bold text-gray-900">
+                            No Pending Appointments Today
+                        </h3>
+
+                        <p class="mt-2 text-xs text-gray-500">
+                            There are no pending appointment requests scheduled for today.
+                        </p>
+
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
     </div>
 
     <script>
@@ -1777,11 +2234,43 @@ $closedResult->free();
             }
         });
 
+        // Today's Appointments Modal
+        function openTodayAppointmentsModal() {
+            const modal = document.getElementById('todayAppointmentsModal');
+
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        function closeTodayAppointmentsModal() {
+            const modal = document.getElementById('todayAppointmentsModal');
+
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        // Close Today's Appointments Modal when clicking outside
+        document.getElementById('todayAppointmentsModal')?.addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeTodayAppointmentsModal();
+            }
+        });
+
         // Reopen the requests modal after an approval POST so the receptionist
         // can immediately see the refreshed pending-request list.
         <?php if ($reopenModal): ?>
             openModal();
         <?php endif; ?>
+
+        <?php if (!empty($reopenTodayAppointmentsModal)): ?>
+            openTodayAppointmentsModal();
+                <?php endif; ?>
     </script>
 </body>
 
