@@ -54,7 +54,7 @@
 
                 <!-- Services -->
                 <li>
-                    <a href="service-management.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="services.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-screwdriver-wrench w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Services
@@ -65,21 +65,10 @@
 
                 <!-- Inventory -->
                 <li>
-                    <a href="inventory.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="inventory.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-boxes-stacked w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Inventory
-                        </span>
-                        <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
-                    </a>
-                </li>
-
-                <!-- Job Cards -->
-                <li>
-                    <a href="job-cards.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
-                        <span class="flex items-center gap-3">
-                            <i class="fa-solid fa-file-circle-check w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
-                            Job Cards
                         </span>
                         <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
                     </a>
@@ -277,9 +266,26 @@
             
 <!-- Admin Dashboard Statistics -->
 <section class="mb-6">
-    
+    <section class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-[#E89000]">
+                        <i class="fa-solid fa-users text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-gray-900">User Management</h1>
+                        <p class="mt-0.5 text-xs text-gray-500">View and manage system users</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-[11px] text-gray-500 shadow-sm">
+                    <i class="fa-solid fa-house text-[#E89000]"></i>
+                    <span>Dashboard</span>
+                    <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                    <span class="font-semibold text-gray-800">User Management</span>
+                </div>
+            </section>
 <!-- Quick Actions -->
-<section class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+<section class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm mt-5">
 
     <!-- Header -->
     <div class="mb-7 flex items-center justify-between gap-4">

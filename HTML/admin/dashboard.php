@@ -1,3 +1,7 @@
+<?php
+include "../../PHP/admin_dashboard_backend.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +39,7 @@
 
                 <!-- Dashboard -->
                 <li>
-                    <a href="admin-dashboard.html" class="flex items-center gap-3 rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
+                    <a href="dashboard.php" class="flex items-center gap-3 rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
                         <i class="fa-solid fa-table-columns w-4 text-center"></i>
                         Dashboard
                     </a>
@@ -54,7 +58,7 @@
 
                 <!-- Services -->
                 <li>
-                    <a href="service-management.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="services.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-screwdriver-wrench w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Services
@@ -65,7 +69,7 @@
 
                 <!-- Inventory -->
                 <li>
-                    <a href="inventory.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="inventory.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-boxes-stacked w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Inventory
@@ -74,16 +78,6 @@
                     </a>
                 </li>
 
-                <!-- Job Cards -->
-                <li>
-                    <a href="job-cards.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
-                        <span class="flex items-center gap-3">
-                            <i class="fa-solid fa-file-circle-check w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
-                            Job Cards
-                        </span>
-                        <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
-                    </a>
-                </li>
 
                 <!-- Reports -->
                 <li>
@@ -299,7 +293,7 @@
                     </div>
                     <div>
                         <p class="text-[11px] font-medium text-gray-500">Total Customers</p>
-                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">245</h3>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900"><?php echo $clients_count; ?></h3>
                     </div>
                 </div>
                 <i class="fa-solid fa-arrow-trend-up text-sm text-[#E89000]"></i>
@@ -318,7 +312,7 @@
                     </div>
                     <div>
                         <p class="text-[11px] font-medium text-gray-500">Total Mechanics</p>
-                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">18</h3>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900"><?php echo $mechanics_count; ?></h3>
                     </div>
                 </div>
                 <i class="fa-solid fa-users text-sm text-blue-500"></i>
@@ -337,7 +331,7 @@
                     </div>
                     <div>
                         <p class="text-[11px] font-medium text-gray-500">Active Job Cards</p>
-                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">32</h3>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900"><?php echo $active_jobs_cards; ?></h3>
                     </div>
                 </div>
                 <i class="fa-solid fa-clipboard-list text-sm text-green-600"></i>
@@ -356,7 +350,7 @@
                     </div>
                     <div>
                         <p class="text-[11px] font-medium text-gray-500">Total Spare Parts</p>
-                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900">1,250</h3>
+                        <h3 class="mt-1 text-2xl font-bold tracking-tight text-gray-900"><?php echo $spare_parts_count; ?></h3>
                     </div>
                 </div>
                 <i class="fa-solid fa-boxes-stacked text-sm text-red-500"></i>

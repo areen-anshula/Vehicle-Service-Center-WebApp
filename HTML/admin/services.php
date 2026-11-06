@@ -34,7 +34,7 @@
 
                 <!-- Dashboard -->
                 <li>
-                    <a href="admin-dashboard.html" class="group flex items-center gap-3 justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="dashboard.php" class="group flex items-center gap-3 justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">    
                             <i class="fa-solid fa-table-columns w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Dashboard
@@ -56,7 +56,7 @@
 
                 <!-- Services - Active -->
                 <li>
-                    <a href="service-management.html" class="flex items-center justify-between rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
+                    <a href="services.php" class="flex items-center justify-between rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-screwdriver-wrench w-4 text-center"></i>
                             Services
@@ -67,21 +67,10 @@
 
                 <!-- Inventory -->
                 <li>
-                    <a href="inventory.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="inventory.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-boxes-stacked w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Inventory
-                        </span>
-                        <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
-                    </a>
-                </li>
-
-                <!-- Job Cards -->
-                <li>
-                    <a href="job-cards.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
-                        <span class="flex items-center gap-3">
-                            <i class="fa-solid fa-file-circle-check w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
-                            Job Cards
                         </span>
                         <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
                     </a>
