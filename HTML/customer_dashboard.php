@@ -8,8 +8,8 @@ require_role('customer');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoPulse | Customer Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https:
+    <link rel="stylesheet" href="https:
 </head>
 <body class="min-h-screen bg-gray-100">
     <header class="bg-gray-950 text-white">
