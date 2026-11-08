@@ -39,3 +39,4 @@
     <strong>Executive Monitoring:</strong> Admin view to monitor all daily job cards filtered by status, track total earnings from issued invoices, and oversee overall service center operations.
   </li>
 </ul>
+
