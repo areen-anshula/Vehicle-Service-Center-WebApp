@@ -1005,18 +1005,7 @@
                         class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
                 </div>
 
-                <!-- Reorder Level -->
-                <div>
-                    <label for="reorder-level" class="mb-1.5 block text-xs font-semibold text-gray-700">Reorder Level</label>
-                    <input
-                        id="reorder-level"
-                        name="reorder_level"
-                        type="number"
-                        min="0"
-                        placeholder="Enter minimum stock level"
-                        required
-                        class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-                </div>
+                
 
                 <!-- Supplier -->
                 <div class="md:col-span-2">
