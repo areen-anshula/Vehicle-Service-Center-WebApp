@@ -17,6 +17,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt = $conn->prepare($sql);
 
+    $stmt->bind_param(
+        "sssdi",
+        $part_name,
+        $part_category,
+        $description,
+        $part_price,
+        $quantity
+    );
+
+    if ($stmt->execute()) {
+
+        echo "<script>
+                alert('Spare Part Added Successfully!');
+                window.location.href='inventory.php';
+              </script>";
+
+    } else {
+
+        echo "Error: " . $stmt->error;
+
+    }
+
+
 }
 
 ?>
