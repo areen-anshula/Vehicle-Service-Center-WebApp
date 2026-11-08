@@ -957,17 +957,7 @@
                         class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
                 </div>
 
-                <!-- Part Code -->
-                <div>
-                    <label for="part-code" class="mb-1.5 block text-xs font-semibold text-gray-700">Part Code</label>
-                    <input
-                        id="part-code"
-                        name="part_code"
-                        type="text"
-                        placeholder="e.g. ENG-001"
-                        required
-                        class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-                </div>
+                
 
                 <!-- Category -->
                 <div>
