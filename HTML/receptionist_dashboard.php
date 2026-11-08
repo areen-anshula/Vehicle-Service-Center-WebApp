@@ -1,8 +1,8 @@
-<?php
+<?php /*
 require_once __DIR__ . '/includes/auth.php';
 require_role('receptionist');
 ?>
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,4 +25,4 @@ require_role('receptionist');
         <p class="mt-2 text-gray-500">Receptionist dashboard - pending appointments, job cards and invoices will appear here.</p>
     </main>
 </body>
-</html>
+</html> -->

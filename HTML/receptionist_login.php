@@ -1,4 +1,6 @@
 <?php
+
+/*
 // Receptionist login -> redirects to receptionist_dashboard.php
 require_once __DIR__ . '/includes/auth.php';
 

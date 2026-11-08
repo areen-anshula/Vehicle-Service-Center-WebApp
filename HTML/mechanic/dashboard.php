@@ -1,6 +1,8 @@
 
 <?php
-session_start();
+// Require mechanic login
+$required_role = "mechanic";
+require_once "../../PHP/auth_guard.php";
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -13,11 +15,10 @@ try {
     exit("Database connection failed.");
 }
 
+// Get the currently logged-in mechanic's ID
+$mechanicId = (int) $_SESSION["user_id"];
 
-
-$mechanicId = 2;
-
-// Verify that the logged-in user is a mechanic
+// Verify that the logged-in user is a mechanic in the database
 $roleStmt = $conn->prepare("
     SELECT id
     FROM users
@@ -25,12 +26,15 @@ $roleStmt = $conn->prepare("
       AND LOWER(role) = 'mechanic'
     LIMIT 1
 ");
+
 $roleStmt->bind_param("i", $mechanicId);
 $roleStmt->execute();
 
 if (!$roleStmt->get_result()->fetch_assoc()) {
+    $roleStmt->close();
     exit("Access denied. Mechanic account required.");
 }
+
 $roleStmt->close();
 
 // CSRF TOKEN
@@ -478,7 +482,7 @@ $close_count = count($closedAppointments);
                 <div>
                     <h2 class="text-lg font-bold text-gray-900 sm:text-xl">Mechanic Dashboard</h2>
                     <p class="mt-0.5 text-[11px] text-gray-500">
-                        Welcome back, <span class="font-semibold text-[#E89000]">Mechanic</span>
+                        Welcome back, <?php echo htmlspecialchars($_SESSION["full_name"]); ?>
                     </p>
                 </div>
 
