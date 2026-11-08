@@ -10,6 +10,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $unit_price = $_POST['unit_price'];
     $description = $_POST['description'];
 
+
+    $sql = "INSERT INTO spare_parts
+            (part_name, part_category, description, part_price, quantity)
+            VALUES (?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+
 }
 
 ?>
