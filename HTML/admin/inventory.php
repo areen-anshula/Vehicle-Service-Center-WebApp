@@ -1007,17 +1007,6 @@
 
                 
 
-                <!-- Supplier -->
-                <div class="md:col-span-2">
-                    <label for="part-supplier" class="mb-1.5 block text-xs font-semibold text-gray-700">Supplier Name</label>
-                    <input
-                        id="part-supplier"
-                        name="supplier"
-                        type="text"
-                        placeholder="Enter supplier or company name"
-                        required
-                        class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-700 outline-none transition focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
-                </div>
 
                 <!-- Description -->
                 <div class="md:col-span-2">
