@@ -1,3 +1,118 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Database connection
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+try {
+    $conn = new mysqli("localhost", "root", "", "autopulse");
+    $conn->set_charset("utf8mb4");
+} catch (mysqli_sql_exception $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
+
+// Protect this operation: only an authenticated admin should register staff.
+
+
+// CSRF token
+if (empty($_SESSION['staff_csrf_token'])) {
+    $_SESSION['staff_csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$registrationMessage = "";
+$registrationType = "";
+$openModal = "";
+
+// Handle receptionist/mechanic registration
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
+
+    $fullName = trim($_POST['full_name'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
+    $role = strtolower(trim($_POST['role'] ?? ''));
+
+    $openModal = $role;
+
+    try {
+        // Validate CSRF token
+        if (
+            !isset($_POST['csrf_token']) ||
+            !hash_equals($_SESSION['staff_csrf_token'], $_POST['csrf_token'])
+        ) {
+            throw new Exception("Invalid request. Please refresh the page and try again.");
+        }
+
+        // Only these two roles can be registered through this modal
+        if (!in_array($role, ['receptionist', 'mechanic'], true)) {
+            throw new Exception("Invalid user role.");
+        }
+
+        if ($fullName === "" || $phone === "" || $email === "" || $password === "") {
+            throw new Exception("Please complete all required fields.");
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Please enter a valid email address.");
+        }
+
+        if (strlen($password) < 8) {
+            throw new Exception("Password must contain at least 8 characters.");
+        }
+
+        if ($password !== $confirmPassword) {
+            throw new Exception("Passwords do not match.");
+        }
+
+        // Check whether the email already exists
+        $checkEmail = $conn->prepare(
+            "SELECT id FROM users WHERE email = ? LIMIT 1"
+        );
+        $checkEmail->bind_param("s", $email);
+        $checkEmail->execute();
+
+        if ($checkEmail->get_result()->num_rows > 0) {
+            throw new Exception("An account with this email already exists.");
+        }
+
+        $checkEmail->close();
+
+        // Securely hash the password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insert the new staff account with its assigned role
+        $insertUser = $conn->prepare(
+            "INSERT INTO users (full_name, phone, email, password, role)
+             VALUES (?, ?, ?, ?, ?)"
+        );
+
+        $insertUser->bind_param(
+            "sssss",
+            $fullName,
+            $phone,
+            $email,
+            $hashedPassword,
+            $role
+        );
+
+        $insertUser->execute();
+        $insertUser->close();
+
+        $registrationMessage = ucfirst($role) . " account registered successfully!";
+        $registrationType = "success";
+        $openModal = "";
+
+    } catch (Exception $e) {
+        $registrationMessage = $e->getMessage();
+        $registrationType = "error";
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -284,14 +399,13 @@
                     <span class="font-semibold text-gray-800">User Management</span>
                 </div>
             </section>
+
 <!-- Quick Actions -->
-<section class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm mt-5">
+<section class="mt-5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
 
     <!-- Header -->
     <div class="mb-7 flex items-center justify-between gap-4">
-
         <div class="flex items-center gap-3">
-
             <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-orange-100">
                 <i class="fa-solid fa-bolt text-xl text-[#E89000]"></i>
             </div>
@@ -305,30 +419,27 @@
                     Common administrator actions
                 </p>
             </div>
-
         </div>
 
         <span class="hidden rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-[#E89000] sm:inline-flex">
             4 Actions
         </span>
-
     </div>
 
     <!-- Action Cards -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
         <!-- Add Receptionist -->
-        <a href="add-receptionist.php"
-           class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#E89000] hover:shadow-lg hover:shadow-orange-100/50">
+        <button type="button"
+            onclick="openStaffModal('receptionist')"
+            class="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#E89000] hover:shadow-lg hover:shadow-orange-100/50">
 
             <div class="mb-5 flex items-center justify-between">
-
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 transition-colors duration-300 group-hover:bg-orange-100">
                     <i class="fa-solid fa-user-tie text-xl text-[#E89000]"></i>
                 </div>
 
                 <i class="fa-solid fa-arrow-up-right-from-square text-sm text-gray-300 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[#E89000]"></i>
-
             </div>
 
             <h3 class="font-semibold text-gray-900 transition-colors group-hover:text-[#E89000]">
@@ -343,21 +454,19 @@
                 <span>Create Account</span>
                 <i class="fa-solid fa-arrow-right text-[10px] transition-transform group-hover:translate-x-1"></i>
             </div>
-
-        </a>
+        </button>
 
         <!-- Add Mechanic -->
-        <a href="add-mechanic.php"
-           class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100/50">
+        <button type="button"
+            onclick="openStaffModal('mechanic')"
+            class="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100/50">
 
             <div class="mb-5 flex items-center justify-between">
-
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 transition-colors duration-300 group-hover:bg-blue-100">
                     <i class="fa-solid fa-screwdriver-wrench text-xl text-blue-600"></i>
                 </div>
 
                 <i class="fa-solid fa-arrow-up-right-from-square text-sm text-gray-300 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-blue-600"></i>
-
             </div>
 
             <h3 class="font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
@@ -372,21 +481,18 @@
                 <span>Create Account</span>
                 <i class="fa-solid fa-arrow-right text-[10px] transition-transform group-hover:translate-x-1"></i>
             </div>
-
-        </a>
+        </button>
 
         <!-- Add Admin -->
         <a href="add-admin.php"
-           class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-green-500 hover:shadow-lg hover:shadow-green-100/50">
+            class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-green-500 hover:shadow-lg hover:shadow-green-100/50">
 
             <div class="mb-5 flex items-center justify-between">
-
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 transition-colors duration-300 group-hover:bg-green-100">
                     <i class="fa-solid fa-user-shield text-xl text-green-600"></i>
                 </div>
 
                 <i class="fa-solid fa-arrow-up-right-from-square text-sm text-gray-300 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-green-600"></i>
-
             </div>
 
             <h3 class="font-semibold text-gray-900 transition-colors group-hover:text-green-600">
@@ -401,21 +507,18 @@
                 <span>Create Account</span>
                 <i class="fa-solid fa-arrow-right text-[10px] transition-transform group-hover:translate-x-1"></i>
             </div>
-
         </a>
 
         <!-- Manage Users -->
         <a href="users.php"
-           class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-purple-500 hover:shadow-lg hover:shadow-purple-100/50">
+            class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-purple-500 hover:shadow-lg hover:shadow-purple-100/50">
 
             <div class="mb-5 flex items-center justify-between">
-
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 transition-colors duration-300 group-hover:bg-purple-100">
                     <i class="fa-solid fa-users text-xl text-purple-600"></i>
                 </div>
 
                 <i class="fa-solid fa-arrow-up-right-from-square text-sm text-gray-300 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-purple-600"></i>
-
             </div>
 
             <h3 class="font-semibold text-gray-900 transition-colors group-hover:text-purple-600">
@@ -430,11 +533,9 @@
                 <span>View Users</span>
                 <i class="fa-solid fa-arrow-right text-[10px] transition-transform group-hover:translate-x-1"></i>
             </div>
-
         </a>
 
     </div>
-
 </section>
 
 
@@ -445,6 +546,174 @@
         </div>
     </main>
 </div>
+
+
+<!-- ADD STAFF REGISTRATION MODAL -->
+<div id="staffModal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4">
+
+    <div class="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-gray-100 px-6 py-5">
+
+            <div class="flex items-center gap-3">
+                <div id="staffModalIcon"
+                    class="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-[#E89000]">
+                    <i class="fa-solid fa-user-plus text-lg"></i>
+                </div>
+
+                <div>
+                    <h2 id="staffModalTitle" class="text-lg font-bold text-gray-900">
+                        Register Staff
+                    </h2>
+                    <p class="mt-0.5 text-xs text-gray-500">
+                        Create a new staff account
+                    </p>
+                </div>
+            </div>
+
+            <button type="button" onclick="closeStaffModal()"
+                class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition hover:bg-gray-100 hover:text-gray-700">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Registration Form -->
+        <form method="POST" action="userManagement.php" class="space-y-4 p-6">
+
+            <input type="hidden" name="register_staff" value="1">
+            <input type="hidden" name="role" id="staffRole">
+
+            <input type="hidden" name="csrf_token"
+                value="<?php echo htmlspecialchars($_SESSION['staff_csrf_token']); ?>">
+
+            <!-- Full Name -->
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-gray-700">
+                    Full Name
+                </label>
+
+                <input type="text" name="full_name" required
+                    placeholder="Enter full name"
+                    class="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+            </div>
+
+            <!-- Phone -->
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-gray-700">
+                    Phone Number
+                </label>
+
+                <input type="tel" name="phone" required
+                    placeholder="Enter phone number"
+                    class="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-gray-700">
+                    Email Address
+                </label>
+
+                <input type="email" name="email" required
+                    placeholder="Enter email address"
+                    class="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-gray-700">
+                    Password
+                </label>
+
+                <input type="password" name="password" required minlength="8"
+                    placeholder="Enter password (minimum 8 characters)"
+                    class="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-gray-700">
+                    Confirm Password
+                </label>
+
+                <input type="password" name="confirm_password" required minlength="8"
+                    placeholder="Re-enter password"
+                    class="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+            </div>
+
+            <!-- Modal Buttons -->
+            <div class="flex justify-end gap-3 border-t border-gray-100 pt-5">
+
+                <button type="button" onclick="closeStaffModal()"
+                    class="rounded-lg border border-gray-200 px-5 py-2.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-100">
+                    Cancel
+                </button>
+
+                <button type="submit" id="staffSubmitButton"
+                    class="rounded-lg bg-[#E89000] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-orange-600">
+                    Register Account
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+<script>
+    
+function openStaffModal(role) {
+    const modal = document.getElementById('staffModal');
+    const title = document.getElementById('staffModalTitle');
+    const roleInput = document.getElementById('staffRole');
+    const icon = document.getElementById('staffModalIcon');
+    const submitButton = document.getElementById('staffSubmitButton');
+
+    roleInput.value = role;
+
+    if (role === 'receptionist') {
+        title.textContent = 'Register New Receptionist';
+        icon.className = 'flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-[#E89000]';
+        icon.innerHTML = '<i class="fa-solid fa-user-tie text-lg"></i>';
+
+        submitButton.className = 'rounded-lg bg-[#E89000] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-orange-600';
+    } else if (role === 'mechanic') {
+        title.textContent = 'Register New Mechanic';
+        icon.className = 'flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-blue-600';
+        icon.innerHTML = '<i class="fa-solid fa-screwdriver-wrench text-lg"></i>';
+
+        submitButton.className = 'rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-blue-700';
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.classList.add('overflow-hidden');
+}
+
+function closeStaffModal() {
+    const modal = document.getElementById('staffModal');
+
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.classList.remove('overflow-hidden');
+}
+
+// Close when clicking outside the modal
+document.getElementById('staffModal').addEventListener('click', function(event) {
+    if (event.target === this) {
+        closeStaffModal();
+    }
+});
+
+// Close using Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeStaffModal();
+    }
+});
+
+</script>
 </body>
 
 </html>
