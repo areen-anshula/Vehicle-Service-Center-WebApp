@@ -1,22 +1,22 @@
 
 <?php
 
-session_start();
+// session_start();
 
 // Check Admin session
-if (
-    !isset($_SESSION["user_id"]) ||
-    ($_SESSION["role"] ?? "") !== "admin"
-) {
-    header("Location: admin_login.html");
-    exit;
-}
+// if (
+    // !isset($_SESSION["user_id"]) ||
+    // ($_SESSION["role"] ?? "") !== "admin"
+// ) {
+    // header("Location: admin_login.html");
+    // exit;
+// }
 
-$adminName = $_SESSION["full_name"];
+// $adminName = $_SESSION["full_name"];
 
-?>
+// ?>
 
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -51,7 +51,7 @@ $adminName = $_SESSION["full_name"];
         </h1>
 
         <p class="text-gray-700 mb-2">
-            Welcome, <?php echo htmlspecialchars($adminName); ?>!
+            Welcome, <?php  ?>!
         </p>
 
         <p class="text-gray-500 text-sm mb-6">
@@ -71,4 +71,4 @@ $adminName = $_SESSION["full_name"];
     </script>
 
 </body>
-</html>
+</html>  -->

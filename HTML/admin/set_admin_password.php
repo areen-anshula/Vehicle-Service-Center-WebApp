@@ -1,6 +1,6 @@
 
 <?php
-
+/*
 require_once "db_connect.php";
 
 // CHANGE THESE TWO VALUES TO YOUR ADMIN DETAILS
@@ -59,5 +59,5 @@ try {
     echo "Unable to update Admin account.";
 
 }
-
+*/
 ?>
