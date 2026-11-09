@@ -2,6 +2,7 @@
 
 include '../../PHP/database.php';
 
+<<<<<<< HEAD
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $part_name = $_POST['part_name'];
@@ -43,3 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 
 ?>
+=======
+
+?>
+>>>>>>> c2a1b42aa4b6b8953da12d920024d2b9f8a28072
