@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 $required_role = "admin";
 require_once "../../PHP/auth_guard.php";
@@ -669,3 +670,5 @@ include "../../PHP/admin_dashboard_backend.php";
 </body>
 
 </html>
+=======
+>>>>>>> origin/chamodya
