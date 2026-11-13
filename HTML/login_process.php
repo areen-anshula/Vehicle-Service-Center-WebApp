@@ -47,7 +47,7 @@ try {
     "admin"        => "admin/dashboard.php",
     "mechanic"     => "mechanic/dashboard.php",
     "receptionist" => "receptionist/dashboard.php",
-    "client"       => "client/dashboard.php"
+    "client"       => "homepage.php"
 ];
 
     if (!isset($redirect_pages[$role])) {

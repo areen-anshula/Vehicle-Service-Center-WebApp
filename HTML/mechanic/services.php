@@ -1,0 +1,966 @@
+<?php
+// Require mechanic login
+$required_role = "mechanic";
+require_once "../../PHP/auth_guard.php";
+include "../../PHP/receptionist_services.php";
+
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+// DATABASE CONNECTION
+try {
+    $conn = new mysqli("localhost", "root", "", "autopulse");
+    $conn->set_charset("utf8mb4");
+} catch (mysqli_sql_exception $e) {
+    error_log("Database connection error: " . $e->getMessage());
+    exit("Database connection failed.");
+}
+
+// Get the currently logged-in mechanic's ID
+$mechanicId = (int) $_SESSION["user_id"];
+
+// Verify that the logged-in user is a mechanic in the database
+$roleStmt = $conn->prepare("
+    SELECT id
+    FROM users
+    WHERE id = ?
+      AND LOWER(role) = 'mechanic'
+    LIMIT 1
+");
+
+$roleStmt->bind_param("i", $mechanicId);
+$roleStmt->execute();
+
+if (!$roleStmt->get_result()->fetch_assoc()) {
+    $roleStmt->close();
+    exit("Access denied. Mechanic account required.");
+}
+
+$roleStmt->close();
+
+// CSRF TOKEN
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$csrfToken = $_SESSION['csrf_token'];
+
+$flashMessage = "";
+$flashType = "success";
+
+// ==========================================
+// HANDLE MECHANIC JOB ACTIONS
+// ==========================================
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['job_action'])) {
+
+    $jobCardId = filter_input(INPUT_POST, 'job_card_id', FILTER_VALIDATE_INT);
+    $action = $_POST['job_action'];
+    $submittedToken = $_POST['csrf_token'] ?? '';
+
+    $returnModal = $_POST['return_modal'] ?? 'assigned';
+
+    if (!in_array($returnModal, ['assigned', 'in-progress', 'closed'], true)) {
+        $returnModal = 'assigned';
+    }
+
+    try {
+        if (!$jobCardId || !hash_equals($csrfToken, $submittedToken)) {
+            throw new Exception("Invalid request. Please try again.");
+        }
+
+        $conn->begin_transaction();
+
+        // Lock and verify this job belongs to the logged-in mechanic
+        $checkStmt = $conn->prepare("
+            SELECT id, appointment_id, status
+            FROM job_cards
+            WHERE id = ?
+              AND mechanic_id = ?
+            FOR UPDATE
+        ");
+
+        $checkStmt->bind_param("ii", $jobCardId, $mechanicId);
+        $checkStmt->execute();
+
+        $job = $checkStmt->get_result()->fetch_assoc();
+        $checkStmt->close();
+
+        if (!$job) {
+            throw new Exception("Job card not found or not assigned to your account.");
+        }
+
+        $currentStatus = strtolower(trim($job['status']));
+
+        // START JOB: ASSIGNED -> IN PROGRESS
+        if ($action === 'start') {
+
+            if (!in_array($currentStatus, ['pending', 'assigned'], true)) {
+                throw new Exception("This job cannot be started because its status has changed.");
+            }
+
+            $updateStmt = $conn->prepare("
+                UPDATE job_cards
+                SET status = 'In Progress'
+                WHERE id = ?
+                  AND mechanic_id = ?
+            ");
+
+            $updateStmt->bind_param("ii", $jobCardId, $mechanicId);
+            $updateStmt->execute();
+            $updateStmt->close();
+
+            $flashMessage = "Job successfully moved to In Progress.";
+            $returnModal = 'in-progress';
+        }
+
+        // REJECT JOB: REMOVE ASSIGNMENT AND RETURN APPOINTMENT TO APPROVED
+        elseif ($action === 'reject') {
+
+            if (!in_array($currentStatus, ['pending', 'assigned'], true)) {
+                throw new Exception("Only assigned jobs can be rejected.");
+            }
+
+            // Remove this job-card assignment
+            $deleteStmt = $conn->prepare("
+                DELETE FROM job_cards
+                WHERE id = ?
+                  AND mechanic_id = ?
+            ");
+
+            $deleteStmt->bind_param("ii", $jobCardId, $mechanicId);
+            $deleteStmt->execute();
+            $deleteStmt->close();
+
+            // Make the appointment available for reassignment
+            $appointmentId = (int) $job['appointment_id'];
+
+            $appointmentStmt = $conn->prepare("
+                UPDATE appointment
+                SET status = 'approved'
+                WHERE id = ?
+            ");
+
+            $appointmentStmt->bind_param("i", $appointmentId);
+            $appointmentStmt->execute();
+            $appointmentStmt->close();
+
+            $flashMessage = "Job assignment rejected. It is now available for reassignment.";
+            $returnModal = 'assigned';
+        }
+
+        // CLOSE JOB: IN PROGRESS -> COMPLETED
+        elseif ($action === 'close') {
+
+            if ($currentStatus !== 'in progress') {
+                throw new Exception("Only In Progress jobs can be closed.");
+            }
+
+            $updateStmt = $conn->prepare("
+                UPDATE job_cards
+                SET status = 'Completed'
+                WHERE id = ?
+                  AND mechanic_id = ?
+            ");
+
+            $updateStmt->bind_param("ii", $jobCardId, $mechanicId);
+            $updateStmt->execute();
+            $updateStmt->close();
+
+            $flashMessage = "Job successfully closed.";
+            $returnModal = 'closed';
+        } else {
+            throw new Exception("Invalid job action.");
+        }
+
+        $conn->commit();
+
+        $_SESSION['job_flash_message'] = $flashMessage;
+        $_SESSION['job_flash_type'] = 'success';
+
+    } catch (Throwable $e) {
+
+        $conn->rollback();
+
+        error_log("Mechanic job action error: " . $e->getMessage());
+
+        $_SESSION['job_flash_message'] = $e->getMessage();
+        $_SESSION['job_flash_type'] = 'error';
+    }
+
+    // Prevent duplicate form submissions
+    header("Location: dashboard.php?modal=" . urlencode($returnModal));
+    exit;
+}
+
+// ==========================================
+// FLASH MESSAGE
+// ==========================================
+
+if (isset($_SESSION['job_flash_message'])) {
+    $flashMessage = $_SESSION['job_flash_message'];
+    $flashType = $_SESSION['job_flash_type'] ?? 'success';
+
+    unset($_SESSION['job_flash_message'], $_SESSION['job_flash_type']);
+}
+
+// ==========================================
+// GET MECHANIC'S ASSIGNED JOBS
+// Pending and Assigned are both included
+// ==========================================
+
+$assignedAppointments = [];
+
+$assignedStmt = $conn->prepare("
+    SELECT
+        jc.id AS job_card_id,
+        jc.appointment_id,
+        jc.status AS job_status,
+        a.user_id,
+        u.full_name,
+        a.vehicle_registration_number,
+        a.brand,
+        a.model,
+        a.manufacture_year,
+        a.date,
+        a.time,
+        COALESCE(sv.requested_services, 'No services listed') AS requested_services
+    FROM job_cards jc
+    INNER JOIN appointment a
+        ON a.id = jc.appointment_id
+    INNER JOIN users u
+        ON u.id = a.user_id
+    LEFT JOIN (
+        SELECT
+            aps.appointment_id,
+            GROUP_CONCAT(s.service_name SEPARATOR ', ') AS requested_services
+        FROM appointment_services aps
+        INNER JOIN services s
+            ON s.id = aps.service_id
+        GROUP BY aps.appointment_id
+    ) sv ON sv.appointment_id = a.id
+    WHERE jc.mechanic_id = ?
+      AND LOWER(TRIM(jc.status)) IN ('pending', 'assigned')
+    ORDER BY a.date ASC, a.time ASC
+");
+
+$assignedStmt->bind_param("i", $mechanicId);
+$assignedStmt->execute();
+$assignedAppointments = $assignedStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$assignedStmt->close();
+
+// ==========================================
+// GET IN-PROGRESS JOBS
+// ==========================================
+
+$inProgressAppointments = [];
+
+$inProgressStmt = $conn->prepare("
+    SELECT
+        jc.id AS job_card_id,
+        jc.appointment_id,
+        jc.status AS job_status,
+        a.user_id,
+        u.full_name,
+        a.vehicle_registration_number,
+        a.brand,
+        a.model,
+        a.manufacture_year,
+        a.date,
+        a.time,
+        COALESCE(sv.requested_services, 'No services listed') AS requested_services
+    FROM job_cards jc
+    INNER JOIN appointment a
+        ON a.id = jc.appointment_id
+    INNER JOIN users u
+        ON u.id = a.user_id
+    LEFT JOIN (
+        SELECT
+            aps.appointment_id,
+            GROUP_CONCAT(s.service_name SEPARATOR ', ') AS requested_services
+        FROM appointment_services aps
+        INNER JOIN services s
+            ON s.id = aps.service_id
+        GROUP BY aps.appointment_id
+    ) sv ON sv.appointment_id = a.id
+    WHERE jc.mechanic_id = ?
+      AND LOWER(TRIM(jc.status)) = 'in progress'
+    ORDER BY a.date ASC, a.time ASC
+");
+
+$inProgressStmt->bind_param("i", $mechanicId);
+$inProgressStmt->execute();
+$inProgressAppointments = $inProgressStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$inProgressStmt->close();
+
+// ==========================================
+// GET COMPLETED / CLOSED JOBS
+// ==========================================
+
+$closedAppointments = [];
+
+$closedStmt = $conn->prepare("
+    SELECT
+        jc.id AS job_card_id,
+        jc.appointment_id,
+        jc.status AS job_status,
+        a.user_id,
+        u.full_name,
+        a.vehicle_registration_number,
+        a.brand,
+        a.model,
+        a.manufacture_year,
+        a.date,
+        a.time,
+        COALESCE(sv.requested_services, 'No services listed') AS requested_services
+    FROM job_cards jc
+    INNER JOIN appointment a
+        ON a.id = jc.appointment_id
+    INNER JOIN users u
+        ON u.id = a.user_id
+    LEFT JOIN (
+        SELECT
+            aps.appointment_id,
+            GROUP_CONCAT(s.service_name SEPARATOR ', ') AS requested_services
+        FROM appointment_services aps
+        INNER JOIN services s
+            ON s.id = aps.service_id
+        GROUP BY aps.appointment_id
+    ) sv ON sv.appointment_id = a.id
+    WHERE jc.mechanic_id = ?
+      AND LOWER(TRIM(jc.status)) IN ('completed', 'closed')
+    ORDER BY a.date DESC, a.time DESC
+");
+
+$closedStmt->bind_param("i", $mechanicId);
+$closedStmt->execute();
+$closedAppointments = $closedStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$closedStmt->close();
+
+// ==========================================
+// DASHBOARD COUNTS
+// ==========================================
+
+$approve_count = count($assignedAppointments);
+$in_progress_count = count($inProgressAppointments);
+$close_count = count($closedAppointments);
+
+// Use the exact count of this mechanic's filtered appointments to ensure privacy
+$total_services = $approve_count;
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoPulse | Book Appointment</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
+</head>
+
+<body class="min-h-screen bg-[#F5F5F5] font-poppins text-gray-800">
+    <div class="flex min-h-screen">
+
+        <!-- SIDEBAR -->
+        <aside
+            class="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col overflow-y-auto bg-gray-950 text-white shadow-xl lg:flex">
+            <!-- Logo -->
+            <div class="border-b border-white/10 px-5 py-5">
+                <a href="../homepage.php" class="flex items-center gap-3">
+                    <img src="../../MEDIA/AutoPulse Automotive Service Logo.png" alt="AutoPulse Logo"
+                        class="h-15 w-15 rounded-lg object-contain">
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight">Auto<span class="text-[#E89000]">Pulse</span></h1>
+                        <p class="mt-0.5 text-[10px] tracking-wide text-gray-400">VEHICLE SERVICE CENTER</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Navigation Label -->
+            <div class="px-5 pb-2 pt-6">
+                <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Main Menu</p>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 px-3">
+
+                <ul class="space-y-1">
+
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="dashboard.php"
+                            class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                            <span class="flex items-center gap-3">
+                                <i
+                                    class="fa-solid fa-users w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
+                                Dashboard
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
+                        </a>
+                    </li>
+                    <!-- User Management -->
+                    <li>
+                        <a href="serices.php"
+                            class="flex items-center gap-3 rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
+                            <i class="fa-solid fa-table-columns w-4 text-center"></i>
+                            Services
+                        </a>
+                    </li>
+                    <li>
+                        <a href="inventory.php"
+                            class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                            <span class="flex items-center gap-3">
+                                <i
+                                    class="fa-solid fa-users w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
+                                Inventory
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
+                        </a>
+                    </li>
+                    <!-- Reports -->
+                    <li>
+                        <a href="reports.html"
+                            class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                            <span class="flex items-center gap-3">
+                                <i
+                                    class="fa-solid fa-chart-column w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
+                                Reports
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Account Menu -->
+                <div class="mt-7 border-t border-white/10 pt-5">
+                    <p class="mb-3 px-4 text-[10px] font-semibold uppercase tracking-widest text-gray-500">Account</p>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="admin-profile.html"
+                                class="group flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition hover:bg-white/10 hover:text-white">
+                                <i
+                                    class="fa-solid fa-user w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
+                                Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="login.html"
+                                class="flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+                                <i class="fa-solid fa-right-from-bracket w-4 text-center"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="border-t border-white/10 p-4">
+                <div class="flex items-center gap-2 rounded-lg bg-white/5 p-3">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500/20">
+                        <i class="fa-solid fa-shield-halved text-sm text-[#E89000]"></i>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-semibold text-gray-200">Admin Panel</p>
+                        <p class="text-[10px] text-gray-500">System Management</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="min-w-0 flex-1 lg:ml-64">
+
+            <!-- TOP NAVBAR -->
+            <header class="sticky top-0 z-40 border-b border-gray-200 bg-white shadow-sm">
+                <div class="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+
+                    <!-- Page Title -->
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-900 sm:text-xl">Mechanic Dashboard</h2>
+                        <p class="mt-0.5 text-[11px] text-gray-500">
+                            Welcome back, <?php echo htmlspecialchars($_SESSION["full_name"]); ?>
+                        </p>
+                    </div>
+
+                    <!-- Right Actions -->
+                    <div class="flex items-center gap-3 sm:gap-5">
+
+                        <!-- Notification -->
+
+                        <!-- Notification Dropdown -->
+                        <details class="group relative">
+                            <!-- Notification Button -->
+                            <summary aria-label="Notifications"
+                                class="relative flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-full bg-gray-100 transition hover:bg-orange-50 [&::-webkit-details-marker]:hidden">
+                                <i
+                                    class="fa-regular fa-bell text-base text-gray-700 transition group-open:text-[#E89000]"></i>
+                                <span
+                                    class="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-red-500 text-[9px] font-bold text-white">
+                                    3
+                                </span>
+                            </summary>
+
+                            <!-- Dropdown Panel -->
+                            <div
+                                class="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl sm:w-96">
+
+                                <!-- Header -->
+                                <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                                    <div>
+                                        <h3 class="text-sm font-bold text-gray-900">Notifications</h3>
+                                        <p class="mt-0.5 text-[11px] text-gray-500">You have 3 unread notifications</p>
+                                    </div>
+                                    <button type="button"
+                                        class="text-[11px] font-semibold text-[#E89000] hover:text-orange-600">
+                                        Mark all as read
+                                    </button>
+                                </div>
+
+                                <!-- Notification List -->
+                                <div class="max-h-80 overflow-y-auto">
+
+                                    <!-- Notification 1 -->
+                                    <div
+                                        class="flex gap-3 border-b border-gray-100 bg-orange-50/40 px-4 py-3 transition hover:bg-gray-50">
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100">
+                                            <i class="fa-solid fa-clipboard-check text-sm text-blue-600"></i>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <p class="text-xs font-semibold text-gray-800">New Job Card Assigned</p>
+                                                <span class="h-2 w-2 shrink-0 rounded-full bg-[#E89000]"></span>
+                                            </div>
+                                            <p class="mt-1 text-[11px] leading-relaxed text-gray-500">
+                                                A new job card JC-0048 has been assigned to a mechanic.
+                                            </p>
+                                            <span class="mt-1.5 block text-[10px] text-gray-400">5 minutes ago</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Notification 2 -->
+                                    <div
+                                        class="flex gap-3 border-b border-gray-100 bg-orange-50/40 px-4 py-3 transition hover:bg-gray-50">
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100">
+                                            <i class="fa-solid fa-circle-check text-sm text-green-600"></i>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <p class="text-xs font-semibold text-gray-800">Service Completed</p>
+                                                <span class="h-2 w-2 shrink-0 rounded-full bg-[#E89000]"></span>
+                                            </div>
+                                            <p class="mt-1 text-[11px] leading-relaxed text-gray-500">
+                                                Job card JC-0046 has been marked as completed.
+                                            </p>
+                                            <span class="mt-1.5 block text-[10px] text-gray-400">30 minutes ago</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Notification 3 -->
+                                    <div
+                                        class="flex gap-3 border-b border-gray-100 bg-orange-50/40 px-4 py-3 transition hover:bg-gray-50">
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-100">
+                                            <i class="fa-solid fa-user-plus text-sm text-purple-600"></i>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <p class="text-xs font-semibold text-gray-800">New Customer Registered
+                                                </p>
+                                                <span class="h-2 w-2 shrink-0 rounded-full bg-[#E89000]"></span>
+                                            </div>
+                                            <p class="mt-1 text-[11px] leading-relaxed text-gray-500">
+                                                A new customer has registered on AutoPulse.
+                                            </p>
+                                            <span class="mt-1.5 block text-[10px] text-gray-400">1 hour ago</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Notification 4 -->
+                                    <div class="flex gap-3 px-4 py-3 transition hover:bg-gray-50">
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-100">
+                                            <i class="fa-solid fa-boxes-stacked text-sm text-[#E89000]"></i>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-xs font-semibold text-gray-800">Spare Parts Updated</p>
+                                            <p class="mt-1 text-[11px] leading-relaxed text-gray-500">
+                                                Spare parts inventory has been updated successfully.
+                                            </p>
+                                            <span class="mt-1.5 block text-[10px] text-gray-400">Yesterday</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="border-t border-gray-100 p-3 text-center">
+                                    <a href="#"
+                                        class="text-xs font-semibold text-[#E89000] transition hover:text-orange-600">
+                                        View All Notifications
+                                        <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </details>
+
+
+                        <!-- Divider -->
+                        <div class="hidden h-8 w-px bg-gray-200 sm:block"></div>
+
+                        <!-- Profile -->
+                        <a href="admin-profile.html" class="flex items-center gap-2 sm:gap-3">
+                            <div class="hidden sm:block">
+                                <h4 class="text-xs font-semibold text-gray-900">Admin</h4>
+                                <p class="mt-0.5 text-[10px] text-gray-500">System Administrator</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-down hidden text-[10px] text-gray-400 sm:block"></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <div class="space-y-6 p-4 sm:p-6 lg:p-8">
+
+                <!-- Admin Dashboard Statistics -->
+                <section class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-[#E89000]">
+                            <i class="fa-solid fa-screwdriver-wrench text-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold tracking-tight text-gray-900">Services Overview</h1>
+                            <p class="mt-0.5 text-xs text-gray-500">Track your assigned vehicle service jobs and daily
+                                progress</p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-[11px] text-gray-500 shadow-sm">
+                        <i class="fa-solid fa-house text-[#E89000]"></i>
+                        <span>Dashboard</span>
+                        <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                        <span class="font-semibold text-gray-800">Services</span>
+                    </div>
+                </section>
+
+                <!-- Available Services -->
+                <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+
+                    <!-- Section Header -->
+                    <div
+                        class="flex flex-col gap-3 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-100">
+                                <i class="fa-solid fa-list-check text-lg text-[#E89000]"></i>
+                            </div>
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h2 class="text-base font-bold text-gray-900">Available Services</h2>
+                                    <span
+                                        class="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-semibold text-[#E89000]"><?php echo $total_services; ?>
+                                        Services</span>
+                                </div>
+                                <p class="mt-0.5 text-xs text-gray-500">Browse service details, pricing and availability
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filters -->
+                    <div class="flex flex-col gap-3 px-5 py-4 lg:flex-row lg:items-center">
+
+                        <div class="relative flex-1">
+                            <i
+                                class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-gray-400"></i>
+                            <input id="serviceSearch" type="search" placeholder="Search by service name..."
+                                class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-3 text-xs text-gray-700 outline-none transition placeholder:text-gray-400 focus:border-[#E89000] focus:bg-white focus:ring-2 focus:ring-orange-100">
+                        </div>
+
+                        <div class="flex flex-col gap-2 sm:flex-row">
+                            <select
+                                class="h-10 rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-600 outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+                                <option>All Categories</option>
+                                <option>Maintenance</option>
+                                <option>Repair</option>
+                                <option>Inspection</option>
+                                <option>Cleaning</option>
+                                <option>Other</option>
+                            </select>
+
+                            <select
+                                class="h-10 rounded-lg border border-gray-200 bg-gray-50 px-3 text-xs text-gray-600 outline-none transition focus:border-[#E89000] focus:ring-2 focus:ring-orange-100">
+                                <option>All Statuses</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+
+                            <button type="button"
+                                class="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#FFA500] px-4 text-xs font-semibold text-white transition hover:bg-[#E89000]">
+                                <i class="fa-solid fa-filter text-[10px]"></i>
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service Cards -->
+                    <div id="serviceCards"
+                        class="grid grid-cols-1 gap-4 border-t border-gray-100 bg-gray-50/50 p-5 sm:grid-cols-2 xl:grid-cols-3">
+
+                        <?php
+                        // Color themes to cycle through for active service cards
+                        $themes = [
+                            ['border' => 'orange', 'bg' => 'bg-orange-50', 'text' => 'text-[#E89000]', 'hover_bg' => 'group-hover:bg-[#E89000]', 'icon' => 'fa-solid fa-screwdriver-wrench'],
+                            ['border' => 'blue', 'bg' => 'bg-blue-50', 'text' => 'text-blue-600', 'hover_bg' => 'group-hover:bg-blue-600', 'icon' => 'fa-solid fa-car-battery'],
+                            ['border' => 'green', 'bg' => 'bg-green-50', 'text' => 'text-green-600', 'hover_bg' => 'group-hover:bg-green-600', 'icon' => 'fa-solid fa-car-side'],
+                            ['border' => 'purple', 'bg' => 'bg-purple-50', 'text' => 'text-purple-600', 'hover_bg' => 'group-hover:bg-purple-600', 'icon' => 'fa-solid fa-gears'],
+                            ['border' => 'cyan', 'bg' => 'bg-cyan-50', 'text' => 'text-cyan-600', 'hover_bg' => 'group-hover:bg-cyan-600', 'icon' => 'fa-solid fa-snowflake'],
+                            ['border' => 'yellow', 'bg' => 'bg-yellow-50', 'text' => 'text-yellow-600', 'hover_bg' => 'group-hover:bg-yellow-500', 'icon' => 'fa-solid fa-car-burst'],
+                            ['border' => 'indigo', 'bg' => 'bg-indigo-50', 'text' => 'text-indigo-600', 'hover_bg' => 'group-hover:bg-indigo-600', 'icon' => 'fa-solid fa-car-rear'],
+                            ['border' => 'pink', 'bg' => 'bg-pink-50', 'text' => 'text-pink-600', 'hover_bg' => 'group-hover:bg-pink-600', 'icon' => 'fa-solid fa-car-burst'],
+                            ['border' => 'teal', 'bg' => 'bg-teal-50', 'text' => 'text-teal-600', 'hover_bg' => 'group-hover:bg-teal-600', 'icon' => 'fa-solid fa-gauge-high'],
+                            ['border' => 'red', 'bg' => 'bg-red-50', 'text' => 'text-red-500', 'hover_bg' => 'group-hover:bg-red-500', 'icon' => 'fa-solid fa-car'],
+                        ];
+
+                        if ($all_services && $all_services->num_rows > 0):
+                            $index = 0;
+                            while ($service = $all_services->fetch_assoc()):
+                                $is_active = $service['is_active'] == 1;
+                                $theme = $themes[$index % count($themes)];
+                                $index++;
+
+                                // Inactive services use a gray theme
+                                if (!$is_active) {
+                                    $border_color = 'gray-400';
+                                    $icon_bg = 'bg-gray-100';
+                                    $icon_text = 'text-gray-500';
+                                    $icon_hover_bg = 'group-hover:bg-gray-700';
+                                    $type_text_color = 'text-gray-500';
+                                } else {
+                                    $border_color = $theme['border'] . '-300';
+                                    $icon_bg = $theme['bg'];
+                                    $icon_text = $theme['text'];
+                                    $icon_hover_bg = $theme['hover_bg'];
+                                    $type_text_color = $theme['text'];
+                                }
+
+                                $service_name = htmlspecialchars($service['service_name']);
+                                $service_type = htmlspecialchars($service['service_type']);
+                                $description = htmlspecialchars($service['description']);
+                                $price = number_format($service['price'], 0);
+                                $duration = htmlspecialchars($service['estimate_duration'] ?? 'N/A');
+                                ?>
+                                <article
+                                    class="service-card group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-<?php echo $border_color; ?> hover:shadow-md"
+                                    data-name="<?php echo strtolower($service_name); ?>">
+                                    <div class="flex items-start justify-between">
+                                        <div
+                                            class="flex h-12 w-12 items-center justify-center rounded-xl <?php echo $icon_bg; ?> <?php echo $icon_text; ?> transition <?php echo $icon_hover_bg; ?> group-hover:text-white">
+                                            <i class="<?php echo $theme['icon']; ?> text-xl"></i>
+                                        </div>
+                                        <?php if ($is_active): ?>
+                                            <span
+                                                class="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-semibold text-green-600">
+                                                <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                                                Active
+                                            </span>
+                                        <?php else: ?>
+                                            <span
+                                                class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-[10px] font-semibold text-red-500">
+                                                <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                                                Inactive
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="mt-4">
+                                        <p
+                                            class="text-[10px] font-semibold uppercase tracking-wider <?php echo $type_text_color; ?>">
+                                            <?php echo $service_type; ?></p>
+                                        <h3 class="mt-1 text-sm font-bold text-gray-900"><?php echo $service_name; ?></h3>
+                                        <p class="mt-2 min-h-10 text-[11px] leading-relaxed text-gray-500">
+                                            <?php echo $description; ?></p>
+                                    </div>
+                                    <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                                        <div>
+                                            <p class="text-[10px] text-gray-400">Starting Price</p>
+                                            <p class="mt-0.5 text-lg font-bold text-gray-900">Rs. <?php echo $price; ?></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-[10px] text-gray-400">Duration</p>
+                                            <p class="mt-0.5 text-xs font-semibold text-gray-700"><i
+                                                    class="fa-regular fa-clock mr-1 text-gray-400"></i><?php echo $duration; ?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </article>
+                                <?php
+                            endwhile;
+                            $all_services->free();
+                        else:
+                            ?>
+                            <div class="col-span-full py-12 text-center">
+                                <div class="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-gray-100">
+                                    <i class="fa-solid fa-screwdriver-wrench text-2xl text-gray-400"></i>
+                                </div>
+                                <p class="mt-4 text-sm font-semibold text-gray-700">No Services Found</p>
+                                <p class="mt-1 text-xs text-gray-500">There are no services in the system yet.</p>
+                            </div>
+                        <?php endif; ?>
+
+                    </div>
+
+                    <!-- Pagination -->
+                    <div
+                        class="flex flex-col gap-3 border-t border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                        <p class="text-[11px] text-gray-500">
+                            Showing <span class="font-semibold text-gray-800">1–12</span> of <span
+                                class="font-semibold text-gray-800">12</span> services
+                        </p>
+
+                        <div class="flex items-center gap-1.5">
+                            <button disabled
+                                class="flex h-8 items-center gap-1 rounded-md border border-gray-200 px-3 text-[11px] font-medium text-gray-400 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-chevron-left text-[9px]"></i>
+                                Previous
+                            </button>
+                            <button
+                                class="flex h-8 w-8 items-center justify-center rounded-md bg-[#E89000] text-xs font-semibold text-white">1</button>
+                            <button disabled
+                                class="flex h-8 items-center gap-1 rounded-md border border-gray-200 px-3 text-[11px] font-medium text-gray-400">
+                                Next
+                                <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+
+
+
+
+    <script>
+
+        // ==========================================
+        // MECHANIC DASHBOARD MODALS
+        // ==========================================
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+
+            if (modal) {
+                modal.classList.remove("hidden");
+                modal.classList.add("flex");
+                document.body.classList.add("overflow-hidden");
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+
+            if (modal) {
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+                document.body.classList.remove("overflow-hidden");
+            }
+        }
+
+        // Open buttons
+        function openAssignedAppointmentsModal() {
+            openModal("assignedAppointmentsModal");
+        }
+
+        function openInProgressModal() {
+            openModal("inProgressModal");
+        }
+
+        function openClosedJobsModal() {
+            openModal("closedJobsModal");
+        }
+
+        // Close buttons
+        document.querySelectorAll("[data-close-modal]").forEach(button => {
+            button.addEventListener("click", function () {
+                closeModal(this.dataset.closeModal);
+            });
+        });
+
+        // Close modal when clicking outside
+        document.querySelectorAll('[role="dialog"]').forEach(modal => {
+            modal.addEventListener("click", function (event) {
+                if (event.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+
+        // Close open modal with Escape
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                document.querySelectorAll('[role="dialog"]').forEach(modal => {
+                    if (!modal.classList.contains("hidden")) {
+                        closeModal(modal.id);
+                    }
+                });
+            }
+        });
+
+        // Reopen the correct modal after a PHP action and page reload
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestedModal = urlParams.get("modal");
+
+        if (requestedModal === "assigned") {
+            openAssignedAppointmentsModal();
+        } else if (requestedModal === "in-progress") {
+            openInProgressModal();
+        } else if (requestedModal === "closed") {
+            openClosedJobsModal();
+        }
+
+    </script>
+    <script>
+        // Live search filtering by service name
+        document.getElementById('serviceSearch').addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('#serviceCards .service-card');
+            let visibleCount = 0;
+
+            cards.forEach(function (card) {
+                const name = card.getAttribute('data-name') || '';
+                if (name.includes(query)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show/hide the no-results message
+            let noResults = document.getElementById('noSearchResults');
+            if (visibleCount === 0 && query !== '') {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.id = 'noSearchResults';
+                    noResults.className = 'col-span-full py-12 text-center';
+                    noResults.innerHTML = '<div class="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-gray-100"><i class="fa-solid fa-magnifying-glass text-2xl text-gray-400"></i></div><p class="mt-4 text-sm font-semibold text-gray-700">No Matching Services</p><p class="mt-1 text-xs text-gray-500">No services match your search query.</p>';
+                    document.getElementById('serviceCards').appendChild(noResults);
+                }
+                noResults.style.display = '';
+            } else if (noResults) {
+                noResults.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

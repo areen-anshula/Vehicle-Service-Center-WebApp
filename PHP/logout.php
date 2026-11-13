@@ -25,6 +25,6 @@ if (ini_get("session.use_cookies")) {
 // Destroy the session
 session_destroy();
 
-// Redirect to login page
-header("Location: ../HTML/login.php?logout=success");
+// Redirect to the public homepage after ending the session.
+header("Location: ../HTML/homepage.php?logout=success");
 exit();

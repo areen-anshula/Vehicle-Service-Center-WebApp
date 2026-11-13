@@ -1,3 +1,11 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$homepageWarning = $_SESSION['homepage_warning'] ?? '';
+unset($_SESSION['homepage_warning']);
+?>
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -14,6 +22,44 @@
     <link href="../src/output.css" rel="stylesheet">
 </head>
 <body class="font-poppins !bg-[#F5F5F5]">
+<?php if ($homepageWarning !== ''): ?>
+    <style>
+        @keyframes notification-progress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+    </style>
+    <div id="homepage-warning" role="alert" aria-live="assertive" class="fixed bottom-5 right-5 z-[100] w-[calc(100%-2.5rem)] max-w-sm overflow-hidden rounded-lg border border-gray-200 border-l-4 border-l-[#E89000] bg-white shadow-2xl transition duration-300 ease-out">
+        <div class="flex items-start gap-3 p-4">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-50 text-[#E89000]">
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+            </span>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-bold text-gray-900">Sign-in required</p>
+                <p class="mt-1 text-xs leading-5 text-gray-600"><?= htmlspecialchars($homepageWarning, ENT_QUOTES, 'UTF-8') ?></p>
+            </div>
+            <button type="button" aria-label="Dismiss notification" onclick="dismissHomepageWarning()" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-100 hover:text-gray-700">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="h-1 bg-orange-50">
+            <div class="h-full bg-[#E89000]" style="animation: notification-progress 5s linear forwards;"></div>
+        </div>
+    </div>
+    <script>
+        const homepageWarning = document.getElementById('homepage-warning');
+        let homepageWarningTimeout;
+
+        function dismissHomepageWarning() {
+            if (!homepageWarning || homepageWarning.classList.contains('opacity-0')) return;
+            clearTimeout(homepageWarningTimeout);
+            homepageWarning.classList.add('translate-y-3', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => homepageWarning.remove(), 300);
+        }
+
+        homepageWarningTimeout = setTimeout(dismissHomepageWarning, 5000);
+    </script>
+<?php endif; ?>
 
 <!-- Navigation Bar -->
     
