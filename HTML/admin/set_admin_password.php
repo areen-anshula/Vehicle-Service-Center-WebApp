@@ -1,9 +1,9 @@
 
 <?php
-/*
+
 require_once "db_connect.php";
 
-// CHANGE THESE TWO VALUES TO YOUR ADMIN DETAILS
+
 $adminEmail = "admin@autopulse.com";
 $adminPassword = "Admin@12345";
 
@@ -59,5 +59,4 @@ try {
     echo "Unable to update Admin account.";
 
 }
-*/
 ?>
