@@ -1,8 +1,7 @@
 
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+$required_role = "receptionist";
+require_once __DIR__ . "/auth_guard.php";
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 

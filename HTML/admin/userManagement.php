@@ -1,7 +1,6 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+$required_role = "admin";
+require_once "../../PHP/auth_guard.php";
 
 // Database connection
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -25,7 +24,7 @@ $registrationMessage = "";
 $registrationType = "";
 $openModal = "";
 
-// Handle receptionist/mechanic registration
+// Handle receptionist, mechanic and admin registration
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
 
     $fullName = trim($_POST['full_name'] ?? '');
@@ -46,8 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
             throw new Exception("Invalid request. Please refresh the page and try again.");
         }
 
-        // Only these two roles can be registered through this modal
-        if (!in_array($role, ['receptionist', 'mechanic'], true)) {
+        // Only the three roles offered by the administrator cards are allowed
+        if (!in_array($role, ['receptionist', 'mechanic', 'admin'], true)) {
             throw new Exception("Invalid user role.");
         }
 
@@ -118,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoPulse | Book Appointment</title>
+    <title>AutoPulse | User Management</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
 </head>
@@ -152,7 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
                  <li>
                     <a href="dashboard.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
-                            <i class="fa-solid fa-users w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
+                            <i class="fa-solid fa-table-columns w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Dashboard
                         </span>
                         <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
@@ -162,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
                 <!-- User Management -->
                 <li>
                     <a href="userManagement.php" class="flex items-center gap-3 rounded-lg bg-[#E89000] px-4 py-3 text-xs font-semibold text-white shadow-sm">
-                        <i class="fa-solid fa-table-columns w-4 text-center"></i>
+                        <i class="fa-solid fa-users w-4 text-center"></i>
                         User Management
                     </a>
                 </li>
@@ -212,7 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
                         </a>
                     </li>
                     <li>
-                        <a href="login.html" class="flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+                        <a href="../../PHP/logout.php" class="flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
                             <i class="fa-solid fa-right-from-bracket w-4 text-center"></i>
                             Logout
                         </a>
@@ -400,6 +399,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
                 </div>
             </section>
 
+<?php if ($registrationMessage !== ""): ?>
+    <div class="mt-5 rounded-xl border px-4 py-3 text-sm <?php echo $registrationType === "success" ? "border-green-200 bg-green-50 text-green-700" : "border-red-200 bg-red-50 text-red-700"; ?>">
+        <i class="fa-solid <?php echo $registrationType === "success" ? "fa-circle-check" : "fa-circle-exclamation"; ?> mr-2"></i>
+        <?php echo htmlspecialchars($registrationMessage, ENT_QUOTES, "UTF-8"); ?>
+    </div>
+<?php endif; ?>
+
 <!-- Quick Actions -->
 <section class="mt-5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
 
@@ -484,8 +490,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
         </button>
 
         <!-- Add Admin -->
-        <a href="add-admin.php"
-            class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-green-500 hover:shadow-lg hover:shadow-green-100/50">
+        <button type="button" onclick="openStaffModal('admin')"
+            class="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-green-500 hover:shadow-lg hover:shadow-green-100/50">
 
             <div class="mb-5 flex items-center justify-between">
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 transition-colors duration-300 group-hover:bg-green-100">
@@ -507,7 +513,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_staff'])) {
                 <span>Create Account</span>
                 <i class="fa-solid fa-arrow-right text-[10px] transition-transform group-hover:translate-x-1"></i>
             </div>
-        </a>
+        </button>
 
         <!-- Manage Users -->
         <a href="users.php"
@@ -684,6 +690,12 @@ function openStaffModal(role) {
         icon.innerHTML = '<i class="fa-solid fa-screwdriver-wrench text-lg"></i>';
 
         submitButton.className = 'rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-blue-700';
+    } else if (role === 'admin') {
+        title.textContent = 'Register New Admin';
+        icon.className = 'flex h-11 w-11 items-center justify-center rounded-xl bg-green-100 text-green-600';
+        icon.innerHTML = '<i class="fa-solid fa-user-shield text-lg"></i>';
+
+        submitButton.className = 'rounded-lg bg-green-600 px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-green-700';
     }
 
     modal.classList.remove('hidden');
@@ -712,6 +724,11 @@ document.addEventListener('keydown', function(event) {
         closeStaffModal();
     }
 });
+
+// Reopen the selected modal when server-side validation returns an error.
+<?php if ($registrationType === "error" && in_array($openModal, ["receptionist", "mechanic", "admin"], true)): ?>
+openStaffModal(<?php echo json_encode($openModal); ?>);
+<?php endif; ?>
 
 </script>
 </body>

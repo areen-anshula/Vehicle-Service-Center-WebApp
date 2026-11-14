@@ -1,4 +1,6 @@
 <?php
+$required_role = "receptionist";
+require_once __DIR__ . "/auth_guard.php";
 include "database.php";
 
 $sql = "SELECT COUNT(*) AS total_services FROM services";

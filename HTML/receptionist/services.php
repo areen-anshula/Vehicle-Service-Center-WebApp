@@ -1,4 +1,6 @@
 <?php
+$required_role = "receptionist";
+require_once "../../PHP/auth_guard.php";
 include "../../PHP/receptionist_services.php";
 ?>
 <!DOCTYPE html>
@@ -66,10 +68,20 @@ include "../../PHP/receptionist_services.php";
                         <i class="fa-solid fa-chevron-right text-[9px]"></i>
                     </a>
                 </li>
+                <li>
+                        <a href="inventory.php"
+                            class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                            <span class="flex items-center gap-3">
+                                <i class="fa-solid fa-users w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
+                                Inventory
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-[9px] text-gray-500"></i>
+                        </a>
+                    </li>
 
                 <!-- Reports -->
                 <li>
-                    <a href="reports.html" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
+                    <a href="reports.php" class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                         <span class="flex items-center gap-3">
                             <i class="fa-solid fa-chart-column w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>
                             Reports
@@ -91,7 +103,7 @@ include "../../PHP/receptionist_services.php";
                         </a>
                     </li>
                     <li>
-                        <a href="login.html" class="flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+                        <a href="../../PHP/logout.php" class="flex items-center gap-3 rounded-lg px-4 py-3 text-xs font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
                             <i class="fa-solid fa-right-from-bracket w-4 text-center"></i>
                             Logout
                         </a>
