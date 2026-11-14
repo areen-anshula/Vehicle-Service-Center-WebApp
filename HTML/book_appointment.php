@@ -111,7 +111,7 @@ $iconMap = [
 </head>
 <body class="min-h-screen bg-[#f5f5f5] font-sans text-[#171717]">
     <header class="sticky top-0 z-50 flex min-h-[70px] items-center bg-black px-4 py-0 shadow-md md:px-[6%]">
-        <a href="homepage.html" aria-label="AutoPulse Home">
+        <a href="homepage.php" aria-label="AutoPulse Home">
             <img src="../MEDIA/AutoPulse Automotive Service Logo.png" alt="AutoPulse Logo" class="w-[110px] md:w-[125px]">
         </a>
     </header>
@@ -268,7 +268,7 @@ $iconMap = [
 
             <!-- FORM BUTTONS -->
             <div class="flex flex-col-reverse justify-between gap-3 sm:flex-row sm:items-center">
-                <a href="homepage.html" class="flex h-11 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 text-xs font-semibold text-gray-600 shadow-sm transition hover:bg-gray-100">
+                <a href="homepage.php" class="flex h-11 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 text-xs font-semibold text-gray-600 shadow-sm transition hover:bg-gray-100">
                     <i class="fa-solid fa-arrow-left"></i>Cancel                       
                 </a>
                 <button type="submit" class="flex h-11 items-center justify-center gap-3 rounded-lg bg-[#FFA500] px-4 text-xs font-bold text-white shadow-sm transition hover:bg-[#E89000] sm:min-w-[200px] cursor-pointer">
