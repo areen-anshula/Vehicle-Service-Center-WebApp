@@ -134,7 +134,7 @@ if ($recentResult) {
                     </li>
                     <!-- Reports -->
                     <li>
-                        <a href="reports.html"
+                        <a href="reports.php"
                             class="group flex items-center justify-between rounded-lg px-4 py-3 text-xs font-medium text-gray-300 transition duration-200 hover:bg-white/10 hover:text-white">
                             <span class="flex items-center gap-3">
                                 <i class="fa-solid fa-chart-column w-4 text-center text-gray-400 group-hover:text-[#E89000]"></i>

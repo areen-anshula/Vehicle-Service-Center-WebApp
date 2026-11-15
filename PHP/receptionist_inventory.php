@@ -1,5 +1,6 @@
 <?php
 $required_role = "receptionist";
+$required_role = "mechanic";
 require_once __DIR__ . "/auth_guard.php";
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
