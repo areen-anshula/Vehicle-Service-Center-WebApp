@@ -8,7 +8,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 try {
     // Connect to the AutoPulse database
-    $conn = new mysqli("localhost", "root", "", "autopulse");
+    $conn = new mysqli("localhost", "root", "", "autopulseDatabase");
     $conn->set_charset("utf8mb4");
 
     // Get submitted login details
