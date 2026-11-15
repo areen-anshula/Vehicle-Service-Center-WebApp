@@ -3,7 +3,7 @@
 $host = "localhost";
 $username = "root";
 $password = "";
-$database = "AutoPulse";
+$database = "autopluseDatabase";
 
 $conn = new mysqli($host, $username, $password, $database);
 
